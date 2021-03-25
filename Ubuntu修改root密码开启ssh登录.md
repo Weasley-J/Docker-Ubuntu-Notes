@@ -9,7 +9,7 @@
 ```shell
 # 查看安装情况
 dpkg -l | grep ssh
-sudo apt-get install openssh-server
+sudo apt-get install -y openssh-server
 
 # 查看已安装的软件
 dpkg -l
