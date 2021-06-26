@@ -4,7 +4,7 @@
 
 **本文基于 Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-52-generic x86_64) 实践**
 
-# 一 Docker安装与卸载
+# 1 Docker安装与卸载
 
 ## 1.1 更新你的ubuntu系统
 
@@ -289,7 +289,7 @@ sudo netstat -lntp | grep dockerd
 
 
 
-# 二 Docker常用插件安装
+# 2 Docker常用插件安装
 
 ## 2.1 Docker安装Ubuntu镜像
 
@@ -576,11 +576,13 @@ docker pull portainer/portainer-ce:${latest_version}
 
 ```shell
 #!/usr/bin/env bash
-current_version="2.1.1"
+current_version="2.6.0"
+old_version="2.5.1"
 latest_version="latest"
 #删除老容器
 docker stop portainer
 docker rm -f portainer
+dokcer rmi portainer/portainer-ce:${old_version}
 #创建挂载卷
 docker volume rm portainer_data
 docker volume create portainer_data
@@ -817,9 +819,9 @@ docker run --name zipkin \
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.10.1"
+CURRENT_VERSION="7.13.2"
 # 上一个版本
-OLD_VERSION="7.9.1"
+OLD_VERSION="7.10.1"
 # 容器名称
 CONTAINER_NAME="elasticsearch"
 # 配置文件名称
@@ -1068,7 +1070,7 @@ docker top elasticsearch
 #1. 进入到容器里
 docker exec -it elasticsearch bash
 
-VERSION="7.10.1"
+VERSION="7.13.2"
 #2. 执行安装命令，注意版本和你的ES版本对应
 elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v${VERSION}/elasticsearch-analysis-ik-${VERSION}.zip
 
@@ -1269,9 +1271,9 @@ networks:
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.10.1"
+CURRENT_VERSION="7.13.2"
 # 上一个版本
-OLD_VERSION="7.9.1"
+OLD_VERSION="7.10.1"
 # 容器名称
 CONTAINER_NAME="kibana"
 # 配置文件名称
@@ -1395,9 +1397,9 @@ http://192.168.40.132:5601
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.10.1"
+CURRENT_VERSION="7.13.2"
 # 上一个版本
-PREVIOUS_VERSION="7.9.1"
+OLD_VERSION="7.10.1"
 # 容器名称
 CONTAINER_NAME="logstash"
 # 配置文件名称
@@ -1410,7 +1412,7 @@ BASE_DIR="${ELK_BASE_DIR}/${CONTAINER_NAME}"
 # 销毁旧容器
 docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 
-docker rmi ${CONTAINER_NAME}:${PREVIOUS_VERSION}
+docker rmi ${CONTAINER_NAME}:${OLD_VERSION}
 docker pull ${CONTAINER_NAME}:${CURRENT_VERSION}
 clear && printf '\r\t\t\t\t%s\n\r\r' "Docker镜像列表" && docker images
 
@@ -1507,12 +1509,13 @@ output {
 }
 EOF
 
-# 销毁旧容器
-docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 
 # 设置日志文件读取权限
 chmod -vR 777 ${BASE_DIR}/
 chmod -v 0644 /var/log/messages
+
+# 销毁旧容器
+docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 
 #运行容器
 docker run --name ${CONTAINER_NAME} --restart=always \
@@ -1561,9 +1564,9 @@ docker restart logstash && clear && docker logs -f logstash
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.10.1"
+CURRENT_VERSION="7.13.2"
 # 上一个版本
-PREVIOUS_VERSION="7.9.1"
+OLD_VERSION="7.10.1"
 # 容器名称
 CONTAINER_NAME="logstash"
 # 配置文件名称
@@ -2797,7 +2800,150 @@ Password: password
 
 
 
-# 三 Docker配置和操作
+## 2.16 docker安装PostgresSQL
+
+- 安装`PostgresSQL`，若`dokcer`镜像不存在会自动拉取
+
+```shell
+#!/bin/bash
+
+#安装目录
+BASE_DIR_POSTGRES="/usr/local/postgres"
+#主机ip，填自己虚拟主机的ip
+HOST="192.168.40.132"
+
+clear && mkdir -pv ${BASE_DIR_POSTGRES}
+
+docker stop postgres && docker rm -f postgres
+docker run --name postgres --restart=always \
+  -p 5432:5432 \
+  -v /etc/timezone:/etc/timezone \
+  -v /etc/localtime:/etc/localtime \
+  -v ${BASE_DIR_POSTGRES}:/var/lib/postgresql/data \
+  -e POSTGRES_USER=root \
+  -e POSTGRES_DB=postgres \
+  -e POSTGRES_PASSWORD=123456 \
+  -e PGDATA=/var/lib/postgresql/data/pgdata \
+  -d postgres
+
+#日志
+# clear && docker logs -f postgres
+
+docker exec -it postgres psql -h ${HOST} -U root
+
+# 进入容器界面运行下面的SQL, 创建数据库，如：创建sonarqube的数据库
+CREATE DATABASE "sonarqube" WITH OWNER = "root" TEMPLATE = "postgres" ENCODING = 'UTF8' TABLESPACE = "pg_default"
+COMMENT ON DATABASE "sonarqube" IS 'sonarQube数据库'
+
+#退出postgressql界面, 退出容器。
+```
+
+> 几个数据库参数：
+>
+> 用户名: root
+>
+> 密码: 123456
+
+
+
+- 开启`PostgresSQL`远程访问
+
+修改文件`pg_hba.conf`,创建容器时已经挂载到宿主机目录: /usr/local/postgres/pgdata/pg_hba.conf, 在文件末尾添加一行
+
+```shell
+echo 'host all all 0.0.0.0/0 md5' >>/usr/local/postgres/pgdata/pg_hba.conf
+
+#重启容器
+docker restart postgres
+#日志
+clear && docker logs -f postgres
+```
+
+
+
+- 使用navicat连接验证下
+
+![image-20210626231545007](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210626231545007.png)
+
+
+
+## 2.17 docker安装SonarQube
+
+*注意： SonarQube高版本已经不支持MySQL数据库持久化了，本教程使用PostgresSQL*
+
+```sql
+# 事先去数据库创建sonar的数据
+CREATE DATABASE "sonarqube" WITH OWNER = "root" TEMPLATE = "postgres" ENCODING = 'UTF8' TABLESPACE = "pg_default"
+COMMENT ON DATABASE "sonarqube" IS 'sonarQube数据库'
+```
+
+
+
+```shell
+#!/bin/bash
+
+#sonarqube的宿主机挂载目录
+BASE_DIR_SONARQUBE="/usr/local/sonarqube"
+#此主机ip是你虚拟主机的POSTGRESQL的ip
+POSTGRESQL_HOST="192.168.40.132"
+
+clear && rm -rfv ${BASE_DIR_SONARQUBE}
+mkdir -pv ${BASE_DIR_SONARQUBE}/{data,extensions,logs}
+chown -vR 0999 ${BASE_DIR_SONARQUBE}/
+
+# 社区版本（本示例采用），9001是宿主机的端口用作web访问
+docker stop sonarqube && docker rm -f sonarqube
+docker run --name sonarqube --restart=always \
+  -p 9001:9000 \
+  -p 9092:9092 \
+  -e SONAR_JDBC_USERNAME=root \
+  -e SONAR_JDBC_PASSWORD=123456 \
+  -e SONAR_JDBC_URL="jdbc:postgresql://${POSTGRESQL_HOST}:5432/sonarqube" \
+  -v ${BASE_DIR_SONARQUBE}/data:/opt/sonarqube/data \
+  -v ${BASE_DIR_SONARQUBE}/extensions:/opt/sonarqube/extensions \
+  -v ${BASE_DIR_SONARQUBE}/logs:/opt/sonarqube/logs \
+  -d sonarqube
+
+# 企业版本
+#docker run -d -p 9001:9000  -p 9092:9092 --name sonarqube --restart=always \
+#-v ${BASE_DIR_SONARQUBE}/data:/opt/sonarqube/data \
+#-v ${BASE_DIR_SONARQUBE}/extensions:/opt/sonarqube/extensions \
+#-v ${BASE_DIR_SONARQUBE}/logs:/opt/sonarqube/logs \
+#-e SONAR_JDBC_USERNAME=root \
+#-e SONAR_JDBC_PASSWORD=123456 \
+#-e SONAR_JDBC_URL="jdbc:postgresql://${POSTGRESQL_HOST}:5432/sonarqube" \
+#sonarqube:enterprise
+
+#编辑此文件, 再末尾追加(已经有就不用追加): vm.max_map_count=655360
+vim /etc/sysctl.conf
+sysctl -p
+
+# echo后边用单引号包围要添加的内容
+echo 'vm.max_map_count=655360' >>/etc/sysctl.conf
+sysctl -p
+
+docker restart sonarqube
+#查看容器日志
+docker logs -f sonarqube
+```
+
+- 设置中文语言
+
+浏览器访问sonarqube web界面: http://192.168.40.132:9001
+
+默认用户名密码为：admin/admin
+
+进入界面后: `Administration` --> `marketplace` --> `搜索chinese`，点击同一条款即可安装，安装完根据提示重启web界面语言便是中文。
+
+
+
+到此你的SonarQube安装好了：
+
+![image-20210626233936489](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210626233936489.png)
+
+
+
+# 3 Docker配置和操作
 
 ## 3.1 docker防火墙的配置
 
