@@ -54,6 +54,7 @@ EOF
 #重载daemon守护进程
 sudo systemctl daemon-reload
 
+
 ```
 
 ### 1.1.2 更新软件列表和软件包
@@ -171,6 +172,8 @@ sudo apt-key fingerprint 0EBFCD88
 
 - **x86_64 / amd64**
 
+官方源:
+
 ```shell
 sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
@@ -178,7 +181,20 @@ sudo add-apt-repository \
    stable"
 ```
 
+阿里云源:
+
+```shell
+sudo add-apt-repository \
+   "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+```
+
+
+
 - **arm64**
+
+官方源:
 
 ```shell
 sudo add-apt-repository \
@@ -187,11 +203,33 @@ sudo add-apt-repository \
    stable"
 ```
 
+阿里云源:
+
+```shell
+sudo add-apt-repository \
+   "deb [arch=arm64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+```
+
+
+
 - **armhf**
+
+官方源:
 
 ```shell
 sudo add-apt-repository \
    "deb [arch=armhf] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+```
+
+阿里云源:
+
+```shell
+sudo add-apt-repository \
+   "deb [arch=armhf] http://mirrors.aliyun.com/docker-ce/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
 ```
