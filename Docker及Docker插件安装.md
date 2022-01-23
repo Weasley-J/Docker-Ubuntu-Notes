@@ -3563,6 +3563,58 @@ clear && docker logs -f torna
 
 
 
+## 2.19 Docker安装Nacos
+
+
+
+提示：安装`nacos`前先配置好`mysql`，脚本如下：
+
+```shell
+#!/bin/bash
+CONTAINER_NAME="nacos"
+IMAGE_NAME="nacos/nacos-server"
+BASE_DIR="/usr/local"
+WORK_DIR="${BASE_DIR}/${CONTAINER_NAME}"
+
+
+rm -rfv ${WORK_DIR} && mkdir -pv ${WORK_DIR} && ll ${WORK_DIR}
+
+docker stop nacos && docker rm -f nacos
+docker run --name nacos -p 8848:8848 \
+--net mynet \
+-e MODE="standalone" \
+-e JVM_XMS="512m" \
+-e JVM_XMX="512m" \
+-d ${IMAGE_NAME}
+
+docker cp ${CONTAINER_NAME}:/home/nacos/conf ${WORK_DIR}/
+docker cp ${CONTAINER_NAME}:/home/nacos/logs ${WORK_DIR}/
+ll ${WORK_DIR}/conf
+
+
+docker stop nacos && docker rm -f nacos
+docker run --name nacos -p 8848:8848 --restart=always \
+--net mynet \
+-e MODE="standalone" \
+-e JVM_XMS="512m" \
+-e JVM_XMX="512m" \
+-e SPRING_DATASOURCE_PLATFORM="mysql" \
+-e MYSQL_SERVICE_HOST="192.168.31.105" \
+-e MYSQL_SERVICE_PORT="3306" \
+-e MYSQL_SERVICE_DB_NAME="nacos" \
+-e MYSQL_SERVICE_USER="root" \
+-e MYSQL_SERVICE_PASSWORD="123456" \
+-v /etc/timezone:/etc/timezone \
+-v /etc/localtime:/etc/localtime \
+-v /home/nacos/conf:${WORK_DIR}/conf \
+-v /home/nacos/logs:${WORK_DIR}/logs \
+-d ${IMAGE_NAME}
+
+clear && docker logs -f nacos
+```
+
+
+
 
 
 # 3 Docker配置和操作

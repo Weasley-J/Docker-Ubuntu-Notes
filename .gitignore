@@ -33,3 +33,6 @@ build/
 .vscode/
 /谷粒商城
 /Docker及Docker插件安装.assets
+.DS_Store
+typora-阿里云oss图片json配置.md
+
