@@ -614,13 +614,13 @@ docker pull portainer/portainer-ce:${latest_version}
 
 ```shell
 #!/usr/bin/env bash
-current_version="2.6.0"
-old_version="2.5.1"
+current_version="2.11.0"
+old_version="2.9.3"
 latest_version="latest"
 #删除老容器
 docker stop portainer
 docker rm -f portainer
-dokcer rmi portainer/portainer-ce:${old_version}
+docker rmi portainer/portainer-ce:${old_version}
 #创建挂载卷
 docker volume rm portainer_data
 docker volume create portainer_data
@@ -2157,7 +2157,7 @@ http://192.168.x.x:3000
 
 
 
-## 2.10 Dokcer安装Jenkins
+## 2.10 Docker安装Jenkins
 
 ### 2.10.1 `Jenkins`版本选择
 
@@ -2219,7 +2219,7 @@ docker exec -it jenkins bash
 
 > *两种方式获取*
 
-1. 进入dokcer容器查看docker初始化密码
+1. 进入docker容器查看docker初始化密码
 
 ```shell
 docker exec -it jenkins bash
@@ -2440,7 +2440,7 @@ http://alphahub:116226d0b77a83cd3fac6bf32bc8bddf31@106.14.13.156:9090/job/recomm
 
 
 
-## 2.11 Dokcer安装自定义WebApp
+## 2.11 Docker安装自定义WebApp
 
 #### 2.11.1 安装SpringBoot Application
 
@@ -2840,7 +2840,7 @@ Password: password
 
 ## 2.16 docker安装PostgresSQL
 
-- 安装`PostgresSQL`，若`dokcer`镜像不存在会自动拉取
+- 安装`PostgresSQL`，若`docker`镜像不存在会自动拉取
 
 ```shell
 #!/bin/bash
