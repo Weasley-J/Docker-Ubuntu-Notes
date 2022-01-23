@@ -37,9 +37,11 @@ sudo apt -y upgrade
 我们这里采用的是SecureCRT的rz命令上传至ubuntu操作系统里面，创建nginx文件夹：
 
 ```shell
-NGINX_VERSION="1.19.7"
+#去官网找个最新的稳定版，https://nginx.org/en/download.html
 
-clear && mkdir -p /usr/local/nginx  && cd /usr/local/nginx
+NGINX_VERSION="1.20.2"
+
+clear && mkdir -pv /usr/local/nginx  && cd /usr/local/nginx
 
 #使用wget下载nginx
 wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
@@ -48,6 +50,7 @@ filename="nginx-${NGINX_VERSION}.tar.gz"
 tar -zxvf $filename
 ll
 rm -rfv $filename
+
 #在终端输入 rz 选择上传，sz是下载命令
 apt install -y lrzsz
 rz
@@ -62,7 +65,9 @@ rz
 - 进入nginx-1.19.7目录   使用 configure 命令创建一 Makefile文件:
 
 ```shell
-cd /usr/local/nginx/nginx-1.19.7 && clear && ll
+NGINX_VERSION="1.20.2"
+
+cd /usr/local/nginx/nginx-${NGINX_VERSION} && clear && ll
 ./configure \
 --prefix=/usr/local/nginx \
 --pid-path=/var/run/nginx/nginx.pid \
@@ -172,7 +177,7 @@ make && make install
 启动nginx 之前，上边将临时文件目录指定为/var/temp/nginx/client， 需要在 /var 下创建此目录；
 
 ```shell
-clear && mkdir -p /var/temp/nginx/client
+clear && mkdir -pv /var/temp/nginx/client
 ```
 
 进入到Nginx目录下的sbin目录：
@@ -336,7 +341,7 @@ sudo tee ~/nginx_run.sh <<-'EOF'
 BASE_DIR="/usr/local/nginx"
 mkdir -pv /var/run/nginx && rm -rfv /var/run/nginx/nginx.pid && touch /var/run/nginx/nginx.pid
 ${BASE_DIR}/sbin/nginx
-echo "nginx已经启动了！"
+echo "nginx启动成功！"
 EOF
 # 给文件增加权限
 chmod -vR 777 ~/nginx_run.sh
