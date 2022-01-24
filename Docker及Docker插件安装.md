@@ -3506,7 +3506,7 @@ sudo tee ${BASE_DIR}/config/${CONFIG_FILE} <<-'EOF'
 server.port=7700
 
 # MySQL host, 这里改成你的MySQL的主机ip:端口
-mysql.host=192.168.40.132:3306
+mysql.host=192.168.31.105:3306
 # Schema name, 数据库名
 mysql.schema=torna
 
@@ -3524,10 +3524,15 @@ cat ${BASE_DIR}/config/application.properties
 #删除容器
 docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 
-#正式安装torna, jvm参数根据自己的机器性能调整
+#正式安装torna, jvm参数根据自己的机器性能调整, mysql的参数更具自己配置修改
+#以创建容器的环境变量里面已经指定mysql的链接参数优先级将会高于application.properties的
 docker run --name torna --restart=always \
   -p 7700:7700 \
   -e JAVA_OPTS="-Xms256m -Xmx256m" \
+  -e MYSQL_HOST="192.168.31.105:3306" \
+  -e MYSQL_SCHEMA="torna" \
+  -e MYSQL_USERNAME="root" \
+  -e MYSQL_PASSWORD="123456" \
   -v ${BASE_DIR}/config:/torna/config \
   -v /etc/timezone:/etc/timezone \
   -v /etc/localtime:/etc/localtime \
@@ -3571,46 +3576,46 @@ clear && docker logs -f torna
 
 ```shell
 #!/bin/bash
+#!/bin/bash
+
 CONTAINER_NAME="nacos"
 IMAGE_NAME="nacos/nacos-server"
 BASE_DIR="/usr/local"
 WORK_DIR="${BASE_DIR}/${CONTAINER_NAME}"
-
 
 rm -rfv ${WORK_DIR} && mkdir -pv ${WORK_DIR} && ll ${WORK_DIR}
 
 #准备挂载文件
 docker stop nacos && docker rm -f nacos
 docker run --name nacos -p 8848:8848 \
---net mynet \
--e MODE="standalone" \
--e JVM_XMS="512m" \
--e JVM_XMX="512m" \
--d ${IMAGE_NAME}
+  --net mynet \
+  -e MODE="standalone" \
+  -e JVM_XMS="512m" \
+  -e JVM_XMX="512m" \
+  -d ${IMAGE_NAME}
 
 docker cp ${CONTAINER_NAME}:/home/nacos/conf ${WORK_DIR}/
 docker cp ${CONTAINER_NAME}:/home/nacos/logs ${WORK_DIR}/
 ll ${WORK_DIR}/conf
 
-
 # 以下创建容器时指定的mysql参数根据自己的实际情况修改
 docker stop nacos && docker rm -f nacos
 docker run --name nacos -p 8848:8848 --restart=always \
---net mynet \
--e MODE="standalone" \
--e JVM_XMS="512m" \
--e JVM_XMX="512m" \
--e SPRING_DATASOURCE_PLATFORM="mysql" \
--e MYSQL_SERVICE_HOST="192.168.31.105" \
--e MYSQL_SERVICE_PORT="3306" \
--e MYSQL_SERVICE_DB_NAME="nacos" \
--e MYSQL_SERVICE_USER="root" \
--e MYSQL_SERVICE_PASSWORD="123456" \
--v /etc/timezone:/etc/timezone \
--v /etc/localtime:/etc/localtime \
--v /home/nacos/conf:${WORK_DIR}/conf \
--v /home/nacos/logs:${WORK_DIR}/logs \
--d ${IMAGE_NAME}
+  --net mynet \
+  -e MODE="standalone" \
+  -e JVM_XMS="512m" \
+  -e JVM_XMX="512m" \
+  -e SPRING_DATASOURCE_PLATFORM="mysql" \
+  -e MYSQL_SERVICE_HOST="192.168.31.105" \
+  -e MYSQL_SERVICE_PORT="3306" \
+  -e MYSQL_SERVICE_DB_NAME="nacos" \
+  -e MYSQL_SERVICE_USER="root" \
+  -e MYSQL_SERVICE_PASSWORD="123456" \
+  -v /etc/timezone:/etc/timezone \
+  -v /etc/localtime:/etc/localtime \
+  -v ${WORK_DIR}/conf:/home/nacos/conf \
+  -v ${WORK_DIR}/logs:/home/nacos/logs \
+  -d ${IMAGE_NAME}
 
 #日志
 clear && docker logs -f nacos
