@@ -3576,7 +3576,6 @@ clear && docker logs -f torna
 
 ```shell
 #!/bin/bash
-#!/bin/bash
 
 CONTAINER_NAME="nacos"
 IMAGE_NAME="nacos/nacos-server"
@@ -3619,6 +3618,7 @@ docker run --name nacos -p 8848:8848 --restart=always \
 
 #日志
 clear && docker logs -f nacos
+
 ```
 
 
