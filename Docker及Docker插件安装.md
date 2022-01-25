@@ -2854,12 +2854,11 @@ clear && mkdir -pv ${BASE_DIR_POSTGRES}
 
 docker stop postgres && docker rm -f postgres
 docker run --name postgres --restart=always \
+  --net mynet \
   -p 5432:5432 \
   -v /etc/timezone:/etc/timezone \
   -v /etc/localtime:/etc/localtime \
   -v ${BASE_DIR_POSTGRES}:/var/lib/postgresql/data \
-  -e POSTGRES_USER=root \
-  -e POSTGRES_DB=postgres \
   -e POSTGRES_PASSWORD=123456 \
   -e PGDATA=/var/lib/postgresql/data/pgdata \
   -d postgres
@@ -2867,11 +2866,12 @@ docker run --name postgres --restart=always \
 #日志
 # clear && docker logs -f postgres
 
-docker exec -it postgres psql -h ${HOST} -U root
+docker exec -it postgres psql -h ${HOST} -U postgres
 
 # 进入容器界面运行下面的SQL, 创建数据库，如：创建sonarqube的数据库
-CREATE DATABASE "sonarqube" WITH OWNER = "root" TEMPLATE = "postgres" ENCODING = 'UTF8' TABLESPACE = "pg_default"
-COMMENT ON DATABASE "sonarqube" IS 'sonarQube数据库'
+CREATE ROLE "root" SUPERUSER CREATEDB CREATEROLE LOGIN REPLICATION BYPASSRLS PASSWORD '123456';
+CREATE DATABASE "sonarqube" WITH OWNER = "root" TEMPLATE = "template0" ENCODING = 'UTF8' TABLESPACE = "pg_default";
+COMMENT ON DATABASE "sonarqube" IS 'sonarqube数据库';
 
 #退出postgressql界面, 退出容器。
 ```
@@ -2911,8 +2911,9 @@ clear && docker logs -f postgres
 
 ```sql
 # 事先去数据库创建sonar的数据
-CREATE DATABASE "sonarqube" WITH OWNER = "root" TEMPLATE = "postgres" ENCODING = 'UTF8' TABLESPACE = "pg_default"
-COMMENT ON DATABASE "sonarqube" IS 'sonarQube数据库'
+CREATE ROLE "root" SUPERUSER CREATEDB CREATEROLE LOGIN REPLICATION BYPASSRLS PASSWORD '123456';
+CREATE DATABASE "sonarqube" WITH OWNER = "root" TEMPLATE = "template0" ENCODING = 'UTF8' TABLESPACE = "pg_default";
+COMMENT ON DATABASE "sonarqube" IS 'sonarqube数据库';
 ```
 
 
@@ -2962,7 +2963,7 @@ sysctl -p
 
 docker restart sonarqube
 #查看容器日志
-docker logs -f sonarqube
+clear && docker logs -f sonarqube
 ```
 
 - 设置中文语言
