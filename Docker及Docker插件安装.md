@@ -2730,36 +2730,119 @@ clear && docker logs -f jira
 
 ## 2.14 Docker安装Zipkin链路追踪
 
-#### 2.14.1 [GitHub连接](https://github.com/orgs/openzipkin/packages/container/package/zipkin)
+#### 2.14.1 mysql脚本
+
+```mysql
+CREATE DATABASE IF NOT EXISTS `zipkin` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
+
+DROP TABLE IF EXISTS `zipkin_annotations`;
+CREATE TABLE `zipkin_annotations`
+(
+    `trace_id_high`         bigint                                                  NOT NULL DEFAULT '0' COMMENT 'If non zero, this means the trace uses 128 bit traceIds instead of 64 bit',
+    `trace_id`              bigint                                                  NOT NULL COMMENT 'coincides with zipkin_spans.trace_id',
+    `span_id`               bigint                                                  NOT NULL COMMENT 'coincides with zipkin_spans.id',
+    `a_key`                 varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'BinaryAnnotation.key or Annotation.value if type == -1',
+    `a_value`               blob COMMENT 'BinaryAnnotation.value(), which must be smaller than 64KB',
+    `a_type`                int                                                     NOT NULL COMMENT 'BinaryAnnotation.type() or -1 if Annotation',
+    `a_timestamp`           bigint                                                           DEFAULT NULL COMMENT 'Used to implement TTL; Annotation.timestamp or zipkin_spans.timestamp',
+    `endpoint_ipv4`         int                                                              DEFAULT NULL COMMENT 'Null when Binary/Annotation.endpoint is null',
+    `endpoint_ipv6`         binary(16)                                                       DEFAULT NULL COMMENT 'Null when Binary/Annotation.endpoint is null, or no IPv6 address',
+    `endpoint_port`         smallint                                                         DEFAULT NULL COMMENT 'Null when Binary/Annotation.endpoint is null',
+    `endpoint_service_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci          DEFAULT NULL COMMENT 'Null when Binary/Annotation.endpoint is null',
+    UNIQUE KEY `trace_id_high` (`trace_id_high`, `trace_id`, `span_id`, `a_key`, `a_timestamp`) USING BTREE COMMENT 'Ignore insert on duplicate',
+    KEY `trace_id_high_2` (`trace_id_high`, `trace_id`, `span_id`) USING BTREE COMMENT 'for joining with zipkin_spans',
+    KEY `trace_id_high_3` (`trace_id_high`, `trace_id`) USING BTREE COMMENT 'for getTraces/ByIds',
+    KEY `endpoint_service_name` (`endpoint_service_name`) USING BTREE COMMENT 'for getTraces and getServiceNames',
+    KEY `a_type` (`a_type`) USING BTREE COMMENT 'for getTraces and autocomplete values',
+    KEY `a_key` (`a_key`) USING BTREE COMMENT 'for getTraces and autocomplete values',
+    KEY `trace_id` (`trace_id`, `span_id`, `a_key`) USING BTREE COMMENT 'for dependencies job'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb3;
+
+DROP TABLE IF EXISTS `zipkin_dependencies`;
+CREATE TABLE `zipkin_dependencies`
+(
+    `day`         date                                                    NOT NULL,
+    `parent`      varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    `child`       varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    `call_count`  bigint DEFAULT NULL,
+    `error_count` bigint DEFAULT NULL,
+    PRIMARY KEY (`day`, `parent`, `child`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb3;
+
+DROP TABLE IF EXISTS `zipkin_spans`;
+CREATE TABLE `zipkin_spans`
+(
+    `trace_id_high`       bigint                                                  NOT NULL DEFAULT '0' COMMENT 'If non zero, this means the trace uses 128 bit traceIds instead of 64 bit',
+    `trace_id`            bigint                                                  NOT NULL,
+    `id`                  bigint                                                  NOT NULL,
+    `name`                varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    `remote_service_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci          DEFAULT NULL,
+    `parent_id`           bigint                                                           DEFAULT NULL,
+    `debug`               bit(1)                                                           DEFAULT NULL,
+    `start_ts`            bigint                                                           DEFAULT NULL COMMENT 'Span.timestamp(): epoch micros used for endTs query and to implement TTL',
+    `duration`            bigint                                                           DEFAULT NULL COMMENT 'Span.duration(): micros used for minDuration and maxDuration query',
+    PRIMARY KEY (`trace_id_high`, `trace_id`, `id`) USING BTREE,
+    KEY `trace_id_high` (`trace_id_high`, `trace_id`) USING BTREE COMMENT 'for getTracesByIds',
+    KEY `name` (`name`) USING BTREE COMMENT 'for getTraces and getSpanNames',
+    KEY `remote_service_name` (`remote_service_name`) USING BTREE COMMENT 'for getTraces and getRemoteServiceNames',
+    KEY `start_ts` (`start_ts`) USING BTREE COMMENT 'for getTraces ordering and range'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb3;
+
+```
+
+#### 2.14.2 安装shell脚本
 
 ```bash
-#!/usr/bin/env bash
+#!/bin/bash
 
-docker pull ghcr.io/openzipkin/zipkin:master
+BASE_DIR="/usr/local/zipkin"
+# 浏览器打开链接[https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&v=LATEST&c=exec]下载个最新版, 提取版本号；
+VERSION="2.23.16"
+APP=zipkin-server-${VERSION}-exec
+DOCKER_FILE="${BASE_DIR}/Dockerfile"
+mkdir -pv ${BASE_DIR}
 
-docker run --name="zipkin" \
-  --restart=always \
+cd ${BASE_DIR} || exit
+
+rm -rfv ${BASE_DIR}/${APP}.jar
+wget https://repo1.maven.org/maven2/io/zipkin/zipkin-server/${VERSION}/zipkin-server-${VERSION}-exec.jar
+
+rm -rfv ${DOCKER_FILE}
+{
+  echo FROM openjdk:11
+  echo RUN mkdir -pv ${BASE_DIR}/
+  echo ADD ${APP}.jar ${BASE_DIR}/${APP}.jar
+  echo EXPOSE 9411
+  echo WORKDIR ${BASE_DIR}/
+  echo ENTRYPOINT [\"java\",\"-jar\", \"${BASE_DIR}/${APP}.jar\"]
+} >>${DOCKER_FILE} &&
+  clear && cat ${DOCKER_FILE}
+
+rm -rfv ${APP}.jar
+
+docker stop zipkin && docker rm -f zipkin
+docker rmi -f zipkin:latest
+docker build -f ${DOCKER_FILE} -t zipkin:latest .
+
+docker stop zipkin && docker rm -f zipkin
+#以下mysql的参数需要修改
+docker run --name zipkin --restart=always \
   -p 9411:9411 \
+  -e JAVA_OPTS="-Xms512m -Xmx512m" \
+  -e STORAGE_TYPE="mysql" \
+  -e MYSQL_HOST="192.168.31.105" \
+  -e MYSQL_TCP_PORT="3306" \
+  -e MYSQL_DB="zipkin" \
+  -e MYSQL_USER="root" \
+  -e MYSQL_PASS="123456" \
   -v /etc/timezone:/etc/timezone \
   -v /etc/localtime:/etc/localtime \
-  -d ghcr.io/openzipkin/zipkin:master
-#zipkin logs
+  -d zipkin:latest
+
 clear && docker logs -f zipkin
-
-#或者
-# Note: this is mirrored as ghcr.io/openzipkin/zipkin
-docker pull openzipkin/zipkin
-
-docker run --name="zipkin" \
-  --restart=always \
-  -p 9411:9411 \
-  -v /etc/timezone:/etc/timezone \
-  -v /etc/localtime:/etc/localtime \
-  -d openzipkin/zipkin
-
-#zipkin logs
-clear && docker logs -f zipkin
-
 ```
 
 访问：http://你的ip:9411
@@ -3626,6 +3709,64 @@ clear && docker logs -f nacos
 ```
 
 
+
+## 2.20 Docker安装sentinel
+
+```bash
+#!/bin/bash
+
+
+BASE_DIR="/usr/local/sentinel"
+DASHBOARD_IP="192.168.31.105"
+DASHBOARD_PORT="9412"
+# 浏览器打开链接[https://github.com/alibaba/Sentinel/releases]下载个最新版, 提取版本号；
+VERSION="1.8.3"
+APP="sentinel-dashboard-${VERSION}"
+DOCKER_FILE="${BASE_DIR}/Dockerfile"
+mkdir -pv ${BASE_DIR}/logs
+
+cd ${BASE_DIR} || exit
+
+rm -rfv ${BASE_DIR}/${APP}.jar
+wget https://github.com/alibaba/Sentinel/releases/download/${VERSION}/sentinel-dashboard-${VERSION}.jar
+
+ll
+
+rm -rfv ${DOCKER_FILE}
+{
+  echo FROM openjdk:11
+  echo RUN mkdir -pv ${BASE_DIR}/
+  echo ADD ${APP}.jar ${BASE_DIR}/${APP}.jar
+  echo EXPOSE 8719 ${DASHBOARD_PORT}
+  echo WORKDIR ${BASE_DIR}/
+  echo ENTRYPOINT [\"java\",\"-jar\", \"${BASE_DIR}/${APP}.jar\"]
+} >>${DOCKER_FILE} &&
+  clear && cat ${DOCKER_FILE}
+
+docker stop sentinel && docker rm -f sentinel
+docker rmi -f sentinel:latest
+docker build -f ${DOCKER_FILE} -t sentinel:latest .
+
+docker stop sentinel && docker rm -f sentinel
+docker run --name sentinel --restart=always \
+  -p 9412:9412 \
+  -p 8719:8719 \
+  -e JAVA_OPTS="-Xms512m -Xmx512m" \
+  -e SERVER_PORT="${DASHBOARD_PORT}" \
+  -e CSP_SENTINEL_DASHBOAR_SERVER="${DASHBOARD_IP}:${DASHBOARD_PORT}" \
+  -e PROJECT_NAME="sentinel-dashboard" \
+  -e CSP_SENTINEL_LOG_DIR="${BASE_DIR}/logs" \
+  -v /etc/timezone:/etc/timezone \
+  -v /etc/localtime:/etc/localtime \
+  -v ${BASE_DIR}/logs:${BASE_DIR}/logs \
+  -d sentinel:latest
+
+clear && docker logs -f sentinel
+
+rm -rfv ${APP}.jar
+
+#访问sentinel控制面板: http://192.168.31.105:9412
+```
 
 
 
