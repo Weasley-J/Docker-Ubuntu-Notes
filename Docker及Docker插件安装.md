@@ -1604,9 +1604,9 @@ docker restart logstash && clear && docker logs -f logstash
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.13.2"
+CURRENT_VERSION="7.17.0"
 # 上一个版本
-OLD_VERSION="7.10.1"
+OLD_VERSION="7.16.3"
 # 容器名称
 CONTAINER_NAME="logstash"
 # 配置文件名称
