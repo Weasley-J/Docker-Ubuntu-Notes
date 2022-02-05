@@ -857,9 +857,9 @@ docker run --name zipkin \
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.13.2"
+CURRENT_VERSION="7.17.0"
 # 上一个版本
-OLD_VERSION="7.10.1"
+OLD_VERSION="7.16.3"
 # 容器名称
 CONTAINER_NAME="elasticsearch"
 # 配置文件名称
@@ -1390,6 +1390,7 @@ docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 #运行容器; --restart=always 表示：docker启动容器后自动启动该容器
 docker run --name ${CONTAINER_NAME} --restart=always \
   -p 5601:5601 \
+  -e JAVA_OPTS="-Xm512m -Xmx512m" \
   -v ${BASE_DIR}/config:/usr/share/kibana/config \
   -v /etc/timezone:/etc/timezone \
   -v /etc/localtime:/etc/localtime \
@@ -1559,6 +1560,7 @@ docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 docker run --name ${CONTAINER_NAME} --restart=always \
   -p 5044:5044 \
   -p 9600:9600 \
+  -e JAVA_OPTS="-Xm512m -Xmx512m" \
   --privileged=true \
   -v ${BASE_DIR}/config/conf.d/:/usr/share/logstash/conf.d/ \
   -v ${BASE_DIR}/config:/usr/share/${CONTAINER_NAME}/config \
@@ -2735,8 +2737,8 @@ clear && docker logs -f jira
 ```mysql
 CREATE DATABASE IF NOT EXISTS `zipkin` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
 
-DROP TABLE IF EXISTS `zipkin_annotations`;
-CREATE TABLE `zipkin_annotations`
+DROP TABLE IF EXISTS `zipkin`.`zipkin_annotations`;
+CREATE TABLE `zipkin`.`zipkin_annotations`
 (
     `trace_id_high`         bigint                                                  NOT NULL DEFAULT '0' COMMENT 'If non zero, this means the trace uses 128 bit traceIds instead of 64 bit',
     `trace_id`              bigint                                                  NOT NULL COMMENT 'coincides with zipkin_spans.trace_id',
@@ -2759,8 +2761,8 @@ CREATE TABLE `zipkin_annotations`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb3;
 
-DROP TABLE IF EXISTS `zipkin_dependencies`;
-CREATE TABLE `zipkin_dependencies`
+DROP TABLE IF EXISTS `zipkin`.`zipkin_dependencies`;
+CREATE TABLE `zipkin`.`zipkin`.`zipkin_dependencies`
 (
     `day`         date                                                    NOT NULL,
     `parent`      varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -2771,8 +2773,8 @@ CREATE TABLE `zipkin_dependencies`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb3;
 
-DROP TABLE IF EXISTS `zipkin_spans`;
-CREATE TABLE `zipkin_spans`
+DROP TABLE IF EXISTS `zipkin`.`zipkin_spans`;
+CREATE TABLE `zipkin`.`zipkin_spans`
 (
     `trace_id_high`       bigint                                                  NOT NULL DEFAULT '0' COMMENT 'If non zero, this means the trace uses 128 bit traceIds instead of 64 bit',
     `trace_id`            bigint                                                  NOT NULL,
@@ -3686,8 +3688,12 @@ docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.
 
 # 以下创建容器时指定的mysql参数根据自己的实际情况修改
 docker stop nacos && docker rm -f nacos
-docker run --name nacos -p 8848:8848 --restart=always \
+docker run --name nacos --restart=always \
   --net mynet \
+  -p 7848:7848 \
+  -p 8848:8848 \
+  -p 9848:9848 \
+  -p 9849:9849 \
   -e MODE="standalone" \
   -e JVM_XMS="512m" \
   -e JVM_XMX="512m" \
