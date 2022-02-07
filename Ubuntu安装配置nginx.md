@@ -339,8 +339,11 @@ rm -rfv ~/nginx_run.sh
 sudo tee ~/nginx_run.sh <<-'EOF'
 #!/bin/bash
 BASE_DIR="/usr/local/nginx"
+CONFIG="${BASE_DIR}/conf/nginx.conf"
+sudo kill $(sudo lsof -t -i:80)
 mkdir -pv /var/run/nginx && rm -rfv /var/run/nginx/nginx.pid && touch /var/run/nginx/nginx.pid
-${BASE_DIR}/sbin/nginx
+${BASE_DIR}/sbin/nginx -t
+${BASE_DIR}/sbin/nginx -c ${CONFIG}
 echo "nginx启动成功！"
 EOF
 # 给文件增加权限
