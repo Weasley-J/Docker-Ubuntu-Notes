@@ -261,7 +261,7 @@ sudo apt-get -y install docker-ce docker-ce-cli containerd.io
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
-  "registry-mirrors": ["https://7ge0bal0.mirror.aliyuncs.com"]
+  "registry-mirrors": ["https://7ge0bal0.mirror.aliyuncs.com","https://docker.mirrors.ustc.edu.cn","http://hub-mirror.c.163.com"]
 }
 EOF
 sudo systemctl daemon-reload
@@ -614,21 +614,19 @@ docker pull portainer/portainer-ce:${latest_version}
 
 ```shell
 #!/usr/bin/env bash
-current_version="2.11.0"
-old_version="2.9.3"
-latest_version="latest"
+
+current_version="2.11.1"
+old_version="2.11.0"
 #删除老容器
-docker stop portainer
-docker rm -f portainer
+docker stop portainer && docker rm -f portainer
 docker rmi portainer/portainer-ce:${old_version}
+docker pull portainer/portainer-ce:${current_version}
 #创建挂载卷
-docker volume rm portainer_data
-docker volume create portainer_data
+docker volume rm portainer_data && docker volume create portainer_data
 #运行容器,在线更新
 docker run --name=portainer --restart=always \
   -p 8000:8000 \
   -p 9000:9000 \
-  --pull=always \
   -v portainer_data:/data \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /usr/bin/docker:/usr/bin/docker \
