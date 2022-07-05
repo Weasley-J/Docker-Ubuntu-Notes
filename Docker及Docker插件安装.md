@@ -3018,6 +3018,7 @@ docker stop sonarqube && docker rm -f sonarqube
 docker run --name sonarqube --restart=always \
   -p 9001:9000 \
   -p 9092:9092 \
+  -e JAVA_OPTS="-Xmx512m -Xms128m" \
   -e SONAR_JDBC_USERNAME=root \
   -e SONAR_JDBC_PASSWORD=123456 \
   -e SONAR_JDBC_URL="jdbc:postgresql://${POSTGRESQL_HOST}:5432/sonarqube" \
