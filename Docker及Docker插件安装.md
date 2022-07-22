@@ -3771,6 +3771,107 @@ rm -rfv ${APP}.jar
 
 
 
+## 2.21 Docker安转oracle数据库
+
+```bash
+#!/bin/bash
+
+IMG='registry.cn-hangzhou.aliyuncs.com/zhuyijun/oracle:19c'
+WORK_DIR='/usr/local/oracle/oradata'
+CONTAINER='oracle19c'
+
+# pull image
+# pull ${IMG}
+
+# mkdir
+rm -rfv "$WORK_DIR"
+mkdir -p ${WORK_DIR}
+chmod 777 ${WORK_DIR}
+
+# account parameter
+ORACLE_SID="lwj"
+ORACLE_PDB="lwjpdb"
+ORACLE_PWD="123456"
+
+#nwtwork
+docker network rm mynet
+docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.1 mynet
+
+# run container
+docker stop ${CONTAINER}
+docker rm -f ${CONTAINER}
+docker run --name ${CONTAINER} \
+  --net mynet \
+  -p 1521:1521 -p 5500:5500 \
+  -e ORACLE_SID=${ORACLE_SID} \
+  -e ORACLE_PDB=${ORACLE_PDB} \
+  -e ORACLE_PWD=${ORACLE_PWD} \
+  -e ORACLE_EDITION=standard \
+  -v /etc/timezone:/etc/timezone \
+  -v /etc/localtime:/etc/localtime \
+  -v ${WORK_DIR}:/opt/oracle/oradata \
+  -d ${IMG}
+
+#logs
+docker logs -ft ${CONTAINER}
+
+docker exec -it ${CONTAINER} /bin/bash
+
+sqlplus / as sysdba
+
+show pdbs;
+
+# Setting SYS SYSTEM password
+docker exec ${CONTAINER} ./setPassword.sh $ORACLE_PWD
+
+docker exec -it --user root ${CONTAINER} /bin/bash
+
+cp -rv /etc/skel/.bash_profile /root/
+
+cp -rv /etc/skel/.bashrc /root/
+
+yum install vi
+
+vi ~/.bash_profile
+
+source ~/.bash_profile
+
+docker exec -it ${CONTAINER} /bin/bash
+
+sqlplus system/123456@lwj
+
+# select name,open_mode from v$pdbs;
+
+
+# alter session set container=lwjpdb;
+```
+
+
+
+- 创建用户
+
+```sql
+CREATE USER "C##LWJ" IDENTIFIED BY "123456" DEFAULT TABLESPACE "SYSTEM";
+
+GRANT "DBA", "PDB_DBA" TO "C##LWJ" WITH ADMIN OPTION;
+
+ALTER USER "C##LWJ" DEFAULT ROLE "DBA", "PDB_DBA"
+```
+
+
+
+- 登录用户就可以在这个用户的名下建表
+
+![image-20220722214009822](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20220722214009822.png)
+
+![image-20220722214028242](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20220722214028242.png)
+
+![image-20220722214210148](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20220722214210148.png)
+
+
+
+
+
 # 3 Docker配置和操作
 
 ## 3.1 docker防火墙的配置
