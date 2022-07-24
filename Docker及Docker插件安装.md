@@ -598,7 +598,7 @@ docker ps -l
 
 ```shell
 #!/usr/bin/env bash
-current_version="2.1.1"
+current_version="2.14.1"
 latest_version="latest"
 docker stop portainer
 docker rm -f portainer
@@ -615,18 +615,19 @@ docker pull portainer/portainer-ce:${latest_version}
 ```shell
 #!/usr/bin/env bash
 
-current_version="2.11.1"
+current_version="2.14.1"
 old_version="2.11.0"
-#删除老容器
-docker stop portainer && docker rm -f portainer
+
 docker rmi portainer/portainer-ce:${old_version}
 docker pull portainer/portainer-ce:${current_version}
 #创建挂载卷
 docker volume rm portainer_data && docker volume create portainer_data
+
+#删除老容器
+docker stop portainer && docker rm -f portainer
 #运行容器,在线更新
 docker run --name=portainer --restart=always \
-  -p 8000:8000 \
-  -p 9000:9000 \
+  -p 9000:9000 -p 9443:9443 \
   -v portainer_data:/data \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /usr/bin/docker:/usr/bin/docker \
@@ -635,7 +636,6 @@ docker run --name=portainer --restart=always \
   -d portainer/portainer-ce:${current_version}
 #日志
 clear && docker logs -f portainer
-
 ```
 
 ### 2.2.9 浏览器访问容器9000端口
@@ -2931,11 +2931,12 @@ Password: password
 #安装目录
 BASE_DIR_POSTGRES="/usr/local/postgres"
 #主机ip，填自己虚拟主机的ip
-HOST="192.168.40.132"
+HOST="192.168.31.23"
 
 clear && mkdir -pv ${BASE_DIR_POSTGRES}
 
 docker stop postgres && docker rm -f postgres
+docker rmi postgres && docker pull postgres
 docker run --name postgres --restart=always \
   --net mynet \
   -p 5432:5432 \
@@ -3007,18 +3008,21 @@ COMMENT ON DATABASE "sonarqube" IS 'sonarqube数据库';
 #sonarqube的宿主机挂载目录
 BASE_DIR_SONARQUBE="/usr/local/sonarqube"
 #此主机ip是你虚拟主机的POSTGRESQL的ip
-POSTGRESQL_HOST="192.168.40.132"
+POSTGRESQL_HOST="192.168.31.23"
 
 clear && rm -rfv ${BASE_DIR_SONARQUBE}
 mkdir -pv ${BASE_DIR_SONARQUBE}/{data,extensions,logs}
 chown -vR 0999 ${BASE_DIR_SONARQUBE}/
+
+docker stop sonarqube && docker rm -f sonarqube
+docker rmi sonarqube && docker pull sonarqube
 
 # 社区版本（本示例采用），9001是宿主机的端口用作web访问
 docker stop sonarqube && docker rm -f sonarqube
 docker run --name sonarqube --restart=always \
   -p 9001:9000 \
   -p 9092:9092 \
-  -e JAVA_OPTS="-Xmx512m -Xms128m" \
+  -e JAVA_OPTS="-Xmx512m -Xms512m" \
   -e SONAR_JDBC_USERNAME=root \
   -e SONAR_JDBC_PASSWORD=123456 \
   -e SONAR_JDBC_URL="jdbc:postgresql://${POSTGRESQL_HOST}:5432/sonarqube" \
@@ -3694,7 +3698,7 @@ docker run --name nacos --restart=always \
   -e JVM_XMS="512m" \
   -e JVM_XMX="512m" \
   -e SPRING_DATASOURCE_PLATFORM="mysql" \
-  -e MYSQL_SERVICE_HOST="192.168.31.105" \
+  -e MYSQL_SERVICE_HOST="192.168.31.23" \
   -e MYSQL_SERVICE_PORT="3306" \
   -e MYSQL_SERVICE_DB_NAME="nacos" \
   -e MYSQL_SERVICE_USER="root" \
@@ -3772,7 +3776,112 @@ rm -rfv ${APP}.jar
 
 
 
-## 2.21 Docker安转oracle数据库
+## **2.21 Docker安装seata**
+
+```bash
+#!/bin/bash
+
+#打开链接[https://github.com/seata/seata/releases]查看现在的版本号
+CURRENT_VERSION="1.4.2"
+OLD_VERSION="1.4.2"
+DOWNLOAD_LINK="https://github.com/seata/seata/releases/download/v${CURRENT_VERSION}/seata-server-${CURRENT_VERSION}.tar.gz"
+
+BASE_DIR="/usr/local/seata"
+CONTAINER_NAME="seata-server"
+IMAGE_NAME="seataio/seata-server"
+WORK_DIR="${BASE_DIR}/${CONTAINER_NAME}"
+
+mkdir -pv "${BASE_DIR}/"
+mkdir -pv "${WORK_DIR}/"
+
+cd ${BASE_DIR}/ || exit
+rm -rfv seata-server-${CURRENT_VERSION}.tar.gz
+wget ${DOWNLOAD_LINK}
+rm -rfv "${BASE_DIR}/seata"
+tar -C "${BASE_DIR}/" -xzvf "${BASE_DIR}/seata-server-${CURRENT_VERSION}.tar.gz"
+mv -fv "${BASE_DIR}/seata/seata-server-${CURRENT_VERSION}" "${BASE_DIR}/seata-server-${CURRENT_VERSION}"
+rm -rfv "${BASE_DIR}/seata"
+ll ${BASE_DIR}/
+
+#拉镜像
+docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
+docker rmi -f ${IMAGE_NAME}:${OLD_VERSION}
+docker pull ${IMAGE_NAME}:${CURRENT_VERSION}
+clear && printf '\r\t\t\t\t%s\n\r\r' "Docker镜像列表" && docker images
+
+docker network rm mynet
+docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.1 mynet
+
+#复制文件
+docker run --name ${CONTAINER_NAME} -p 8091:8091 -d ${IMAGE_NAME}:${CURRENT_VERSION}
+docker cp ${CONTAINER_NAME}:/seata-server ${BASE_DIR}/
+ll ${WORK_DIR}
+
+docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
+
+#创建数据库[seata], 初始化sql，链接: https://github.com/seata/seata/tree/develop/script/server/db
+#这里自行创建即可，不做演示。
+
+#登录nacos，创建seata的nacos命名空间，改配置文件会用到，如：
+#命名空间名称:命名空间ID, seata-server:f1c51b7c-562f-48c8-9b15-3a0ebd25dc2d, Group: SEATA_GROUP
+
+#修改file.conf文件, 将mode修改为db, 然后把数据库配置[database store property]换成上面自己新建的seata数据库的配置
+cd ${WORK_DIR}/resources/ || exit
+cat file.conf
+#这一步你可以使用vim修改file.conf，完成后保存并退出vim
+vim file.conf
+
+#修改registry.conf文件，将type修改为nacos, 将注册中心和配置中心改为自己上面创建的命名空间和对应的nacos IP地址
+#主要修改两个代码块：registry {}, config {}; [dataId = "seataServer.properties"]可先加#号注释掉
+vim registry.conf
+
+#下载源码
+cd ${BASE_DIR} || exit
+wet https://github.com/seata/seata/archive/refs/tags/v${CURRENT_VERSION}.tar.gz
+tar -xzvf "seata-${CURRENT_VERSION}.tar.gz"
+cd ${BASE_DIR}/seata-${CURRENT_VERSION}/script/config-center || exit
+
+# vim修改config.txt，将[store.mode=file]改为[store.mode=db],将数据库[store.db.*]改为自己数据库的配置
+# [service.vgroupMapping.my_test_tx_group=default]改为[service.vgroupMapping.lejing_tx_group=default],
+# 这个[lejing_tx_group]代码中会用到, 对应自己的事务的名, 根据自己的情况修改
+vim config.txt
+
+CONFIG_TEXT="${BASE_DIR}/seata-${CURRENT_VERSION}/script/config-center/config.txt"
+# cat检查[config.txt]参数对不对
+cat ${CONFIG_TEXT}
+
+#接下来导入[config.txt]元数据到[nacos]中
+NACOS_CONFIG="${BASE_DIR}/seata-${CURRENT_VERSION}/script/config-center/nacos/nacos-config.sh"
+NACOS_HOST="192.168.31.23"
+GROUP="SEATA_GROUP"
+NAME_SPACE="f1c51b7c-562f-48c8-9b15-3a0ebd25dc2d"
+chmod 777 -v ${NACOS_CONFIG}
+cd "${BASE_DIR}/seata-${CURRENT_VERSION}/script/config-center/nacos/" || exit
+#USAGE OPTION: $0 [-h host] [-p port] [-g group] [-t tenant] [-u username] [-w password]
+${NACOS_CONFIG} -h ${NACOS_HOST} -p 8848 -g ${GROUP} -t ${NAME_SPACE}
+
+#重启容器, 更多支持的环境变量参考: https://registry.hub.docker.com/r/seataio/seata-server
+docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
+docker run --name ${CONTAINER_NAME} --restart=always \
+  --net mynet \
+  -p 8091:8091 \
+  -v ${WORK_DIR}:/seata-server \
+  -v /etc/timezone:/etc/timezone \
+  -v /etc/localtime:/etc/localtime \
+  -e SEATA_IP="192.168.31.23" \
+  -e SEATA_PORT="8091" \
+  -d ${IMAGE_NAME}:${CURRENT_VERSION}
+
+clear && docker logs -f ${CONTAINER_NAME}
+
+rm -rfv ${BASE_DIR}/seata-${CURRENT_VERSION}.tar.gz
+rm -rfv ${BASE_DIR}/seata-server-${CURRENT_VERSION}.tar.gz
+rm -rfv ${BASE_DIR}/seata-server-${CURRENT_VERSION}
+```
+
+
+
+## 2.22 Docker安转oracle数据库
 
 ```bash
 #!/bin/bash
@@ -3870,6 +3979,152 @@ ALTER USER "C##LWJ" DEFAULT ROLE "DBA", "PDB_DBA"
 ![image-20220722214210148](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20220722214210148.png)
 
 
+
+## 2.23 docker安装mariadb
+
+```bash
+#!/bin/bash
+
+WORK_DIR='/usr/local/mariadb'
+IMG='mariadb:latest'
+CONTAINER='mariadb'
+
+mkdir -pv $WORK_DIR/{conf,conf/conf.d}
+touch $WORK_DIR/conf/my.cnf $WORK_DIR/conf/conf.d/config-file.cn
+chmod 777 -vR $WORK_DIR
+
+docker rmi -f $IMG && docker pull $IMG
+
+docker network rm mynet
+docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.1 mynet
+
+docker stop $CONTAINER && docker rm -f $CONTAINER
+docker run --name $CONTAINER \
+  -p 3308:3306 \
+  --net mynet \
+  -v $WORK_DIR:/var/lib/mysql \
+  -e MARIADB_ROOT_PASSWORD=123456 \
+  -v /etc/timezone:/etc/timezone \
+  -v /etc/localtime:/etc/localtime \
+  -d $IMG
+
+clear && docker logs -f mariadb
+```
+
+
+
+- ## reset root and user passwords
+
+  Adjust `myuser`, `databasename` and passwords as needed.
+
+  ```shell
+  # enter container
+  docker exec -it mariadb bash
+  
+  mysql -u root -p123456
+  
+  use mysql;
+  ```
+
+  
+
+  ```sql
+  CREATE USER IF NOT EXISTS root@localhost IDENTIFIED BY '123456';
+  SET PASSWORD FOR root@localhost = PASSWORD('123456');
+  GRANT ALL ON *.* TO root@localhost WITH GRANT OPTION;
+  CREATE USER IF NOT EXISTS root@'%' IDENTIFIED BY '123456';
+  SET PASSWORD FOR root@'%' = PASSWORD('123456');
+  GRANT ALL ON *.* TO root@'%' WITH GRANT OPTION;
+  
+  CREATE USER IF NOT EXISTS lwj@'%' IDENTIFIED BY '123456';
+  SET PASSWORD FOR lwj@'%' = PASSWORD('123456');
+  CREATE DATABASE IF NOT EXISTS db_demo;
+  GRANT ALL ON db_demo.* TO lwj@'%';
+  ```
+
+
+
+```bash
+docker restart mariadb
+```
+
+
+
+##  2.24 Docker 运行 SQL Server
+
+[微软官方文档](https://docs.microsoft.com/zh-cn/sql/linux/quickstart-install-connect-docker?view=sql-server-ver16&pivots=cs1-bash)
+
+```bash
+#!/bin/bash
+
+IMG='mcr.microsoft.com/mssql/server:latest'
+WORK_DIR='/usr/local/sqlserver'
+CONTAINER='sqlserver'
+
+rm -rfv "$WORK_DIR"
+mkdir -pv $WORK_DIR/{mssql,}
+chmod 777 -vR $WORK_DIR
+
+docker rmi -f $IMG && docker pull $IMG
+
+docker network rm mynet
+docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.1 mynet
+
+docker stop $CONTAINER && docker rm -f $CONTAINER
+docker run --name $CONTAINER --hostname $CONTAINER \
+  -p 1433:1433 \
+  --net mynet \
+  -e "ACCEPT_EULA=Y" \
+  -e "SA_PASSWORD=weasley@dtt123" \
+  -v $WORK_DIR/mssql:/var/opt/mssql \
+  -v /etc/timezone:/etc/timezone \
+  -v /etc/localtime:/etc/localtime \
+  -d $IMG
+
+docker logs -f sqlserver
+
+# 在容器内部使用完整路径通过 sqlcmd 进行本地连接, 没报错就成功了
+docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "weasley@dtt123"
+
+```
+
+
+
+##  2.25 Docker 运行 DB2
+
+```bash
+#!/bin/bash
+
+IMG='ibmcom/db2:latest'
+WORK_DIR='/usr/local/db2'
+CONTAINER='db2'
+
+rm -rfv "$WORK_DIR"
+mkdir -pv $WORK_DIR/{database,}
+chmod 777 -vR $WORK_DIR
+
+docker rmi -f $IMG && docker pull $IMG
+
+docker network rm mynet
+docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.1 mynet
+
+docker stop $CONTAINER && docker rm -f $CONTAINER
+docker run --name $CONTAINER --privileged=true \
+  --net mynet \
+  -p 50000:50000 \
+  -e LICENSE=accept \
+  -e DBNAME=testdb \
+  -e DB2INSTANCE=weasley \
+  -e DB2INST1_PASSWORD=123456 \
+  -v $WORK_DIR/database:/database \
+  -v /etc/timezone:/etc/timezone \
+  -v /etc/localtime:/etc/localtime \
+  -d $IMG
+
+docker logs -f db2
+
+docker exec -it db2 /bin/bash
+```
 
 
 
