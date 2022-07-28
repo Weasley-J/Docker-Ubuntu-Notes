@@ -599,10 +599,10 @@ docker ps -l
 ```shell
 #!/usr/bin/env bash
 current_version="2.14.1"
-latest_version="latest"
+latest_version="2.14.2"
 docker stop portainer
 docker rm -f portainer
-docker rmi portainer/portainer-ce:${latest_version}
+docker rmi portainer/portainer-ce:${current_version}
 docker pull portainer/portainer-ce:${latest_version}
 ```
 
@@ -615,8 +615,8 @@ docker pull portainer/portainer-ce:${latest_version}
 ```shell
 #!/usr/bin/env bash
 
-current_version="2.14.1"
-old_version="2.11.0"
+current_version="2.14.2"
+old_version="2.14.1"
 
 docker rmi portainer/portainer-ce:${old_version}
 docker pull portainer/portainer-ce:${current_version}
