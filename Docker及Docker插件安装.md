@@ -2319,7 +2319,15 @@ docker restart jenkins && docker logs -f jenkins
 
 
 
-### 2.10.6 `Jenkins`基于[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)和[Authorize Project](https://plugins.jenkins.io/authorize-project)角色权限分配后`git webhooks`**远程构建触发**
+### 2.10.6 配置换机Jenkins的Maven环境
+
+JDK的比较简单，Maven的比较记录一下
+
+![image-20221024000319560](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221024000319560.png)
+
+![image-20221024000438366](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221024000438366.png)
+
+### 2.10.7 `Jenkins`基于[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)和[Authorize Project](https://plugins.jenkins.io/authorize-project)角色权限分配后`git webhooks`**远程构建触发**
 
 > 踩坑背景：
 >
