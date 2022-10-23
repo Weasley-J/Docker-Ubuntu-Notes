@@ -594,19 +594,7 @@ docker ps -l
 
 [portainer-ce镜像（带tag）](https://hub.docker.com/r/portainer/portainer-ce/tags?page=1&ordering=last_updated)
 
-### 2.2.7 拉取portainer-ce镜像
-
-```shell
-#!/usr/bin/env bash
-current_version="2.14.1"
-latest_version="2.14.2"
-docker stop portainer
-docker rm -f portainer
-docker rmi portainer/portainer-ce:${current_version}
-docker pull portainer/portainer-ce:${latest_version}
-```
-
-### 2.2.8 安装portainer-ce
+### 2.2.1 安装portainer-ce
 
 [官方安装链接](https://www.portainer.io/installation/)
 
@@ -615,30 +603,31 @@ docker pull portainer/portainer-ce:${latest_version}
 ```shell
 #!/usr/bin/env bash
 
-current_version="2.14.2"
-old_version="2.14.1"
+current_version="2.15.1"
+old_version="2.14.2"
 
+docker stop portainer && docker rm -f portainer
 docker rmi portainer/portainer-ce:${old_version}
 docker pull portainer/portainer-ce:${current_version}
+
 #创建挂载卷
 docker volume rm portainer_data && docker volume create portainer_data
 
-#删除老容器
 docker stop portainer && docker rm -f portainer
-#运行容器,在线更新
 docker run --name=portainer --restart=always \
-  -p 9000:9000 -p 9443:9443 \
+  -p 8000:8000 -p 9000:9000 -p 9443:9443 \
   -v portainer_data:/data \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /etc/timezone:/etc/timezone \
   -v /etc/localtime:/etc/localtime \
   -d portainer/portainer-ce:${current_version}
+
 #日志
 clear && docker logs -f portainer
 ```
 
-### 2.2.9 浏览器访问容器9000端口
+### 2.2.2 浏览器访问容器9000端口
 
 - You'll just need to access the port 9000 of the Docker engine where portainer is running using your browser.
 
@@ -843,9 +832,9 @@ docker run --name zipkin \
 >
 >  http://宿主机IP:9200/
 
-### 2.5.1  [hub.docker.com](https://hub.docker.com/)查看镜像版本号
+### 2.5.1  查看镜像版本号
 
-- 这里以`elasticsearch 7.10.1`做安装示例，具体版本请移步[hub.docker.com](https://hub.docker.com/)查看
+- 这里以`elasticsearch 7.17.6`做安装示例，具体版本请移步[hub.docker.com](https://hub.docker.com/)查看
 
 ```shell
 #!/bin/bash
@@ -855,7 +844,7 @@ docker run --name zipkin \
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.17.0"
+CURRENT_VERSION="7.17.6"
 # 上一个版本
 OLD_VERSION="7.16.3"
 # 容器名称
@@ -1007,6 +996,7 @@ clear && docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 docker run --name ${CONTAINER_NAME} --restart=always \
   -p 9200:9200 \
   -p 9300:9300 \
+  --net mynet \
   -e ES_JAVA_OPTS="-Xms512m -Xmx512m" \
   -e "discovery.type=single-node" \
   -v /etc/timezone:/etc/timezone \
@@ -1022,6 +1012,7 @@ clear && docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 docker run --name ${CONTAINER_NAME} --restart=always \
   -p 9200:9200 \
   -p 9300:9300 \
+  --net mynet \
   -e ES_JAVA_OPTS="-Xms1g -Xmx1g" \
   -v /etc/timezone:/etc/timezone \
   -v /etc/localtime:/etc/localtime \
@@ -1106,7 +1097,7 @@ docker top elasticsearch
 #1. 进入到容器里
 docker exec -it elasticsearch bash
 
-VERSION="7.13.2"
+VERSION="7.17.6"
 #2. 执行安装命令，注意版本和你的ES版本对应
 elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v${VERSION}/elasticsearch-analysis-ik-${VERSION}.zip
 
@@ -1224,7 +1215,7 @@ To get a three-node Elasticsearch cluster up and running in Docker, you can use 
 version: '2.2'
 services:
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     container_name: es01
     environment:
       - node.name=es01
@@ -1244,7 +1235,7 @@ services:
     networks:
       - elastic
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     container_name: es02
     environment:
       - node.name=es02
@@ -1262,7 +1253,7 @@ services:
     networks:
       - elastic
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
     container_name: es03
     environment:
       - node.name=es03
@@ -1307,7 +1298,7 @@ networks:
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.13.2"
+CURRENT_VERSION="7.17.6"
 # 上一个版本
 OLD_VERSION="7.10.1"
 # 容器名称
@@ -1388,6 +1379,7 @@ docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 #运行容器; --restart=always 表示：docker启动容器后自动启动该容器
 docker run --name ${CONTAINER_NAME} --restart=always \
   -p 5601:5601 \
+  --net mynet \
   -e JAVA_OPTS="-Xm512m -Xmx512m" \
   -v ${BASE_DIR}/config:/usr/share/kibana/config \
   -v /etc/timezone:/etc/timezone \
@@ -1420,7 +1412,7 @@ http://192.168.40.132:5601
 
 ## 2.6.b Docker安装Logstash
 
-> 注意：版本最好和ElasticSearch的版本b保持一致
+> 注意：版本最好和`ElasticSearch`,`Kibana`的版本保持一致
 
 
 
@@ -1434,7 +1426,7 @@ http://192.168.40.132:5601
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.13.2"
+CURRENT_VERSION="7.17.6"
 # 上一个版本
 OLD_VERSION="7.10.1"
 # 容器名称
@@ -1558,8 +1550,9 @@ docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
 docker run --name ${CONTAINER_NAME} --restart=always \
   -p 5044:5044 \
   -p 9600:9600 \
-  -e JAVA_OPTS="-Xm512m -Xmx512m" \
+  --net mynet \
   --privileged=true \
+  -e JAVA_OPTS="-Xm512m -Xmx512m" \
   -v ${BASE_DIR}/config/conf.d/:/usr/share/logstash/conf.d/ \
   -v ${BASE_DIR}/config:/usr/share/${CONTAINER_NAME}/config \
   -v ${BASE_DIR}/pipeline:/usr/share/${CONTAINER_NAME}/pipeline \
@@ -1570,7 +1563,6 @@ docker run --name ${CONTAINER_NAME} --restart=always \
 
 # 查看日志
 clear && docker logs -f logstash
-
 ```
 
 
@@ -1602,7 +1594,7 @@ docker restart logstash && clear && docker logs -f logstash
 #
 
 # 当前软件的版本
-CURRENT_VERSION="7.17.0"
+CURRENT_VERSION="7.17.6"
 # 上一个版本
 OLD_VERSION="7.16.3"
 # 容器名称
@@ -1709,7 +1701,11 @@ docker restart logstash && clear && docker logs -f logstash
 
 
 
-- 浏览器访问: http://192.168.40.132:9600/
+- 浏览器访问: http://127.0.0.1:9600/
+
+```bash
+curl http://127.0.0.1:9600/
+```
 
 ![image-20210302045936822](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210302045936822.png)
 
@@ -1743,6 +1739,7 @@ sudo mkdir -pv /usr/local/mysql/{conf,data,logs}
 > 注意自己容器映射宿主机的端口`-p 3306:3306 \`
 
 ```shell
+docker stop mysql && docker rm -f mysql
 docker run --name mysql --restart=always \
   -p 3306:3306 \
   -e MYSQL_ROOT_PASSWORD=123456 \
@@ -2159,11 +2156,13 @@ http://192.168.x.x:3000
 
 ## 2.10 Docker安装Jenkins
 
+[官方文档](https://github.com/jenkinsci/docker/blob/master/README.md)
+
 ### 2.10.1 `Jenkins`版本选择
 
 ```shell
 #To use the latest LTS: 
-docker pull jenkins/jenkins:lts
+docker pull jenkins/jenkins:lts-jdk11
 
 #To use the latest weekly: 
 docker pull jenkins/jenkins
@@ -2174,7 +2173,7 @@ docker pull jenkins/jenkins
 ```shell
 # 创建挂载卷目录,映射到本地
 # rm -rfv /usr/local/{jenkins,jenkins/home}
-sudo mkdir -pv /usr/local/{jenkins,jenkins/home,jenkins-script,webapp,jdk,node,logs}/
+sudo mkdir -pv /usr/local/{jenkins,jenkins/home,jenkins-script,maven,webapp,jdk,node,logs}/
 
 #先销毁容器
 docker stop jenkins
@@ -2186,6 +2185,7 @@ docker run --name jenkins \
   -u root \
   -p 9090:8080 \
   -p 50000:50000 \
+  -e JAVA_OPTS="-Xms512m -Xmx512m" \
   -v /etc/timezone:/etc/timezone \
   -v /etc/localtime:/etc/localtime \
   -v /usr/local/jenkins:/var/jenkins_home \
@@ -2194,10 +2194,11 @@ docker run --name jenkins \
   -v /usr/local/jenkins/home:/home \
   -v /usr/local/jenkins-script:/usr/local/jenkins-script \
   -v /usr/local/webapp:/usr/local/webapp \
+  -v /usr/local/maven:/usr/local/maven \
   -v /usr/local/logs:/usr/local/logs \
   -v /usr/local/jdk:/usr/local/jdk \
   -v /usr/local/node:/usr/local/node \
-  -d jenkins/jenkins:lts
+  -d jenkins/jenkins:lts-jdk11
 ```
 
 - 以下挂载卷解决 docker in docker的问题
@@ -4125,6 +4126,157 @@ docker logs -f db2
 
 docker exec -it db2 /bin/bash
 ```
+
+
+
+## 2.16 docker安装MongoDB
+
+- 安装
+
+```bash
+#!/bin/bash
+docker stop mongo && docker pull mongo
+
+#rm -rfv /usr/local/mongo/db
+mkdir -pv /usr/local/mongo/db
+
+docker stop mongo && docker rm mongo
+docker run --name mongo --restart=always \
+  -p 27017:27017 \
+  --net mynet \
+  -v /usr/local/mongo/db:/data/db \
+  -e MONGO_INITDB_DATABASE=yapi \
+  -e MONGO_INITDB_ROOT_USERNAME=yapipro \
+  -e MONGO_INITDB_ROOT_PASSWORD=yapipro1024 \
+  -d mongo
+```
+
+```shell
+docker logs -f mongo
+```
+
+- 进入 MongoDB 容器后，进入 mongo cli
+
+```shell
+docker exec -it mongo /bin/bash
+# 进入 MongoDB 容器后，进入 mongo cli
+mongo localhost:27017
+# 进入 MongoDB 的 mongo cli 后，执行以下语句进行初始化库表
+```
+
+![image-20221021030859760](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221021030859760.png)
+
+
+
+```mongodb
+use admin;
+db.auth("yapipro", "yapipro1024");
+# 创建yapi数据库
+use yapi;
+# 创建给yapi使用的账号和密码，限制权限yapi是我们初始化的数据库
+db.createUser({
+  user: 'yapi',
+  pwd: 'yapi123456',
+  roles: [
+ { role: "dbAdmin", db: "yapi" },
+ { role: "readWrite", db: "yapi" }
+  ]
+});
+```
+
+![image-20221021031132532](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221021031132532.png)
+
+```bash
+#退出Mongo Cli
+exit;
+#退出容器
+exit
+```
+
+
+
+## 2.17 docker安装Yapi
+
+> 到这一步你已经安装好`mongdb`了
+
+[yapipro/yapi - Docker Image | Docker Hub](https://hub.docker.com/r/yapipro/yapi)
+
+- 安装
+
+```bash
+docker stop yapi && docker pull yapipro/yapi
+
+docker stop yapi && docker rm yapi
+
+BASE_DIR="/usr/local/yapi/conf"
+mkdir -pv $BASE_DIR
+
+#创建yapi配置文件,mail里面的换成自己的真实邮箱
+tee $BASE_DIR/config.json <<-'EOF'
+{
+   "port": "3000",
+   "adminAccount": "1432689025@qq.com",
+   "timeout":120000,
+   "db": {
+     "servername": "mongo",
+     "DATABASE": "yapi",
+     "port": 27017,
+     "user": "yapi",
+     "pass": "yapi123456",
+     "authSource": ""
+   },
+   "mail": {
+     "enable": true,
+     "host": "smtp.qq.com",
+     "port": 465,
+     "from": "*",
+     "auth": {
+       "user": "your_qq_email@qq.com",
+       "pass": "your_password"
+     }
+   }
+ }
+EOF
+
+# 创建容器
+# 初始化管理员账号在上面的config.json配置中的: 1432689025@qq.com,  初始密码是: yapi.pro, 可以登录后进入个人中心修改
+# 初始化数据库表
+docker run -d --rm \
+  --name yapi-init \
+  --link mongodb:mongo \
+  --net mynet \
+  -v $BASE_DIR/config.json:/yapi/config.json \
+   yapipro/yapi \
+  server/install.js
+ 
+docker stop yapi && docker rm yapi
+docker run --name yapi --restart=always \
+  --name yapi \
+  --net mynet \
+  -p 3000:3000 \
+  -v $BASE_DIR/config.json:/yapi/config.json \
+  -d yapipro/yapi \
+  server/app.js
+```
+
+
+
+```bash
+docker logs -f yapi
+```
+
+
+
+```bash
+# 在服务器上验证yapi启动是否成功
+curl http://127.0.0.1:3000/
+```
+
+- 初始化账号密码
+
+user: 1432689025@qq.com
+
+pwd: yapi.pro
 
 
 
