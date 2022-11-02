@@ -603,8 +603,8 @@ docker ps -l
 ```shell
 #!/usr/bin/env bash
 
-current_version="2.15.1"
-old_version="2.14.2"
+current_version="2.16.0"
+old_version="2.15.1"
 
 docker stop portainer && docker rm -f portainer
 docker rmi portainer/portainer-ce:${old_version}
