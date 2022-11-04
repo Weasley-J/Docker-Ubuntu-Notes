@@ -334,6 +334,8 @@ mkdir -p /usr/local/nginx/cert
 
 ## 1.9 设置nginx快速启动脚本
 
+**开机启动nginx**
+
 ```shell
 rm -rfv ~/nginx_run.sh
 sudo tee ~/nginx_run.sh <<-'EOF'
