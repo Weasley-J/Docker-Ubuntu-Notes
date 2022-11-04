@@ -75,6 +75,8 @@ rm -rfv ~/upgrade.sh
 sudo tee ~/upgrade.sh <<-'EOF'
 sudo apt-get -y update
 sudo apt-get -y upgrade
+sudo apt list --upgradable
+sudo apt-get dist-upgrade -y
 sudo apt-get -y clean
 sudo apt-get -y autoclean
 sudo apt-get -y autoremove
