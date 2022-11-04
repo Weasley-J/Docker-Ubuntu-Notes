@@ -2331,6 +2331,12 @@ JDK的比较简单，**Maven的比较坑记录一下**
 
 - 系统管理/全局属性/环境变量
 
+1. JAVA_HOME
+
+2. MAVEN_HOME
+
+3. PATH+EXTRA
+
 ![image-20221024002156868](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221024002156868.png)
 
 ### 2.10.7 `Jenkins`基于[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)和[Authorize Project](https://plugins.jenkins.io/authorize-project)角色权限分配后`git webhooks`**远程构建触发**
@@ -2452,6 +2458,30 @@ http://alphahub:116226d0b77a83cd3fac6bf32bc8bddf31@106.14.13.156:9090/job/recomm
 ![image-20201112162949836](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112162949836.png)
 
 这就是基于权限管理策略下Jenkins的Git远程触发构建流程了。
+
+### 2.10.8 安装必备插件
+
+- 安转`Publish Over SSH`
+
+https://plugins.jenkins.io/publish-over-ssh/
+
+![image-20221104235412138](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221104235412138.png)
+
+
+
+- `Git Parameter`
+
+https://plugins.jenkins.io/git-parameter/
+
+![image-20221104235946206](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221104235946206.png)
+
+
+
+- `NodeJS`
+
+https://plugins.jenkins.io/nodejs/
+
+![image-20221105002506912](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221105002506912.png)
 
 
 
