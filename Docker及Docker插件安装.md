@@ -75,6 +75,8 @@ rm -rfv ~/upgrade.sh
 sudo tee ~/upgrade.sh <<-'EOF'
 sudo apt-get -y update
 sudo apt-get -y upgrade
+sudo apt list --upgradable
+sudo apt-get dist-upgrade -y
 sudo apt-get -y clean
 sudo apt-get -y autoclean
 sudo apt-get -y autoremove
@@ -1812,7 +1814,7 @@ docker rmi -f redis && docker pull redis
 
 # 创建挂载目录
 sudo mkdir -pv ${BASE_DIR}/{data,conf}
-cd ${BASE_DIR}/conf
+cd ${BASE_DIR}/conf || exit
 
 # 从官下载redis配置文件
 rm -rfv ${BASE_DIR}/conf/*
@@ -2337,8 +2339,6 @@ JDK的比较简单，**Maven的比较坑记录一下**
 >
 > ​       Jenkins使用[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)和[Authorize Project](https://plugins.jenkins.io/authorize-project)角色权限管理策略后，默认的Git远程触发构建会被权限插件拦截，导致我们提交代码到Git仓库后，Git发送POST请求给Jenkins服务器，Jenkins服务器响应403状态码，所以我们要解决这个问题，实现基于权限策略的Git提交代码后自动构建发布我们的项目到远程测试服务器。
 
-
-
 #### 2.10.6.1 权限入口
 
 ![image-20201112153515341](Docker及Docker插件安装.assets/image-20201112153515341.png)
@@ -2452,28 +2452,6 @@ http://alphahub:116226d0b77a83cd3fac6bf32bc8bddf31@106.14.13.156:9090/job/recomm
 ![image-20201112162949836](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112162949836.png)
 
 这就是基于权限管理策略下Jenkins的Git远程触发构建流程了。
-
-
-
-### 2.10.8 安装必备插件
-
-- 安转`Publish Over SSH`
-
-https://plugins.jenkins.io/publish-over-ssh/
-
-![image-20221104235412138](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221104235412138.png)
-
-
-
-- `Git Parameter`
-
-https://plugins.jenkins.io/git-parameter/
-
-![image-20221104235946206](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221104235946206.png)
-
-
-
-
 
 
 
