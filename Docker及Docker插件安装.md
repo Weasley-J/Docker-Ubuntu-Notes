@@ -605,7 +605,7 @@ docker ps -l
 ```shell
 #!/usr/bin/env bash
 
-current_version="2.16.0"
+current_version="2.16.2"
 old_version="2.15.1"
 
 docker stop portainer && docker rm -f portainer
@@ -1733,6 +1733,7 @@ docker stop mysql && docker rm -f mysql
 - 创建挂在目录
 
 ```shell
+# rm -rfv /usr/local/mysql
 sudo mkdir -pv /usr/local/mysql/{conf,data,logs}
 ```
 
@@ -1772,7 +1773,7 @@ mysql -u root -p
 use mysql;
 
 #添加远程登录用户
-CREATE USER 'lwj'@'%' IDENTIFIED WITH mysql_native_password BY 'Liuwenjing123!';
+CREATE USER 'lwj'@'%' IDENTIFIED WITH mysql_native_password BY '改成你的密码';
 GRANT ALL PRIVILEGES ON *.* TO 'lwj'@'%';
 FLUSH PRIVILEGES;
 
@@ -1814,7 +1815,7 @@ docker rmi -f redis && docker pull redis
 
 # 创建挂载目录
 sudo mkdir -pv ${BASE_DIR}/{data,conf}
-cd ${BASE_DIR}/conf || exit
+cd ${BASE_DIR}/conf
 
 # 从官下载redis配置文件
 rm -rfv ${BASE_DIR}/conf/*
@@ -4321,6 +4322,72 @@ curl http://127.0.0.1:3000/
 user: 1432689025@qq.com
 
 pwd: yapi.pro
+
+
+
+## 2.18 docker安装xxl-job-admin
+
+- 查看版本: [xuxueli/xxl-job-admin Tags | Docker Hub](https://hub.docker.com/r/xuxueli/xxl-job-admin/tags)
+
+```bash
+#!/bin/bash
+# 配置文件示例: https://github.com/xuxueli/xxl-job/blob/master/xxl-job-admin/src/main/resources/application.properties
+# docker版本标签: https://hub.docker.com/r/xuxueli/xxl-job-admin/tags
+
+WORK_DIR="/usr/local/xxl-job"
+CONTAINER_NAME="xxl-job-admin"
+LATEST_VERSION="2.3.1"
+PREV_VERSION=""
+JAVA_OPTS="-Xms512m -Xmx512m"
+MYSQL_IP="127.0.0.1"
+SPRING_ARGS="--server.servlet.context-path=/job \
+--spring.datasource.url=jdbc:mysql://$MYSQL_IP:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai \
+--spring.datasource.username=root \
+--spring.datasource.password=123456
+"
+
+docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.1 mynet
+
+docker stop $CONTAINER_NAME && docker rm -f $CONTAINER_NAME
+
+#docker rmi xuxueli/xxl-job-admin:$PREV_VERSION
+docker pull xuxueli/xxl-job-admin:$LATEST_VERSION
+
+# centos
+docker stop $CONTAINER_NAME && docker rm -f $CONTAINER_NAME
+docker run --name $CONTAINER_NAME --restart=always \
+  -p 8081:8080 \
+  --net mynet \
+  -e TZ=Asia/Shanghai \
+  -e PARAMS="$SPRING_ARGS" \
+  -e JAVA_OPTS="$JAVA_OPTS" \
+  -v $WORK_DIR:/data/applogs \
+  -d xuxueli/xxl-job-admin:$LATEST_VERSION
+
+# ubuntu
+docker stop $CONTAINER_NAME && docker rm -f $CONTAINER_NAME
+docker run --name $CONTAINER_NAME --restart=always \
+  -p 8081:8080 \
+  --net mynet \
+  -e PARAMS="$SPRING_ARGS" \
+  -e JAVA_OPTS="$JAVA_OPTS" \
+  -v $WORK_DIR:/data/applogs \
+  -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro \
+  -d xuxueli/xxl-job-admin:$LATEST_VERSION
+
+# 日志
+docker logs -f xxl-job-admin
+
+
+# 访问链接
+# http://宿主机ip:8081/job
+```
+
+
+
+
+
+
 
 
 
