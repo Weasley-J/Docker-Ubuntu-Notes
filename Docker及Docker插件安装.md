@@ -605,8 +605,8 @@ docker ps -l
 ```shell
 #!/usr/bin/env bash
 
-current_version="2.16.2"
-old_version="2.15.1"
+current_version="2.18.2"
+old_version="2.16.2"
 
 docker stop portainer && docker rm -f portainer
 docker rmi portainer/portainer-ce:${old_version}
@@ -3063,11 +3063,13 @@ chown -vR 0999 ${BASE_DIR_SONARQUBE}/
 docker stop sonarqube && docker rm -f sonarqube
 docker rmi sonarqube && docker pull sonarqube
 
+docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.1 mynet
 # 社区版本（本示例采用），9001是宿主机的端口用作web访问
 docker stop sonarqube && docker rm -f sonarqube
 docker run --name sonarqube --restart=always \
   -p 9001:9000 \
   -p 9092:9092 \
+  --net mynet \
   -e JAVA_OPTS="-Xmx512m -Xms512m" \
   -e SONAR_JDBC_USERNAME=root \
   -e SONAR_JDBC_PASSWORD=123456 \
@@ -4249,7 +4251,7 @@ exit
 - 安装
 
 ```bash
-docker stop yapi && docker pull yapipro/yapi
+docker rmi -f yapi && docker pull yapipro/yapi
 
 docker stop yapi && docker rm yapi
 
@@ -4385,7 +4387,137 @@ docker logs -f xxl-job-admin
 
 
 
+## 2.19 安装携程Apollo注册中心
 
+```sql
+CREATE DATABASE IF NOT EXISTS `apollo_conf` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
+CREATE DATABASE IF NOT EXISTS `apollo_portal` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
+```
+
+[配置中心数据库脚本](https://github.com/apolloconfig/apollo-quick-start/blob/master/sql/apolloconfigdb.sql)
+
+
+
+- 安装脚本（随宿主机启动）
+
+```bash
+#!/bin/bash
+
+WORK_DIR="/usr/local/apollo"
+mkdir -pv $WORK_DIR $WORK_DIR/logs
+cd ${WORK_DIR}
+
+#数据库配置
+DB_HOST="192.168.31.139"
+DB_PORT="3306"
+DB_NAME="ApolloConfigDB"
+DB_USERNAME="root"
+DB_PASSWORD="123456"
+JAVA_OPTS="-Xms256m -Xmx256m -Xmn256m"
+PRO_META_HOST="192.168.31.139"
+CONFIG_SERVICE_PORT="8081"
+ENV="pro"
+
+# Apollo Config Service
+CONTAINER_NAME="apollo-configservice"
+docker stop $CONTAINER_NAME && docker rm -f $CONTAINER_NAME
+docker run --name $CONTAINER_NAME --restart=always \
+  -p $CONFIG_SERVICE_PORT:8080 \
+  --net mynet \
+  -e TZ=Asia/Shanghai \
+  -e JAVA_OPTS="$JAVA_OPTS" \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://$DB_HOST:$DB_PORT/$DB_NAME?characterEncoding=utf8" \
+  -e SPRING_DATASOURCE_USERNAME=$DB_USERNAME \
+  -e SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD \
+  -e PRO_META=http://$PRO_META_HOST:$CONFIG_SERVICE_PORT \
+  -v $WORK_DIR/logs:/opt/logs \
+  -d apolloconfig/${CONTAINER_NAME}:latest
+
+docker logs -f apollo-configservice
+
+# Apollo Admin Service
+CONTAINER_NAME="apollo-adminservice"
+docker stop $CONTAINER_NAME && docker rm -f $CONTAINER_NAME
+docker run --name $CONTAINER_NAME --restart=always \
+  -p 8090:8090 \
+  --net mynet \
+  -e TZ=Asia/Shanghai \
+  -e JAVA_OPTS="$JAVA_OPTS" \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://$DB_HOST:$DB_PORT/$DB_NAME?characterEncoding=utf8" \
+  -e SPRING_DATASOURCE_USERNAME=$DB_USERNAME \
+  -e SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD \
+  -e APOLLO_PORTAL_ENVS="${ENV}" \
+  -e PRO_META=http://$PRO_META_HOST:$CONFIG_SERVICE_PORT \
+  -v $WORK_DIR/logs:/opt/logs \
+  -d apolloconfig/$CONTAINER_NAME:latest
+
+docker logs -f apollo-adminservice
+
+# Apollo Portal
+DB_NAME="ApolloPortalDB"
+CONTAINER_NAME="apollo-portal"
+docker stop $CONTAINER_NAME && docker rm -f $CONTAINER_NAME
+docker run --name $CONTAINER_NAME --restart=always \
+  -p 8070:8070 \
+  --net mynet \
+  -e TZ=Asia/Shanghai \
+  -e JAVA_OPTS="$JAVA_OPTS" \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://$DB_HOST:$DB_PORT/$DB_NAME?characterEncoding=utf8" \
+  -e SPRING_DATASOURCE_USERNAME=$DB_USERNAME \
+  -e SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD \
+  -e APOLLO_PORTAL_ENVS="${ENV}" \
+  -e PRO_META=http://$PRO_META_HOST:$CONFIG_SERVICE_PORT \
+  -v $WORK_DIR/logs:/opt/logs \
+  -d apolloconfig/$CONTAINER_NAME:latest
+
+docker logs -f apollo-portal
+
+```
+
+
+
+
+
+Apollo Config Service
+
+```bash
+docker stop apollo-configservice && docker rm -f apollo-configservice
+docker run -p 8081:8080 \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://192.168.31.139:3306/ApolloConfigDB?characterEncoding=utf8" \
+  -e SPRING_DATASOURCE_USERNAME=root \
+  -e SPRING_DATASOURCE_PASSWORD=123456 \
+  -e JAVA_OPTS="-Deureka.instance.homePageUrl=http://192.168.31.139:8081" \
+  -d -v /tmp/logs:/opt/logs \
+  --name apollo-configservice apolloconfig/apollo-configservice
+```
+
+Apollo Admin Service
+
+```bash
+docker stop apollo-adminservice && docker rm -f apollo-adminservice
+docker run -p 8090:8090 \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://192.168.31.139:3306/ApolloConfigDB?characterEncoding=utf8" \
+  -e SPRING_DATASOURCE_USERNAME=root \
+  -e SPRING_DATASOURCE_PASSWORD=123456 \
+  -e APOLLO_PORTAL_ENVS=pro \
+  -e PRO_META=http://192.168.31.139:8081 \
+  -d -v /tmp/logs:/opt/logs \
+  --name apollo-adminservice apolloconfig/apollo-adminservice
+```
+
+Apollo Portal
+
+```bash
+docker stop apollo-portal && docker rm -f apollo-portal
+docker run -p 8070:8070 \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://192.168.31.139:3306/ApolloPortalDB?characterEncoding=utf8" \
+  -e SPRING_DATASOURCE_USERNAME=root \
+  -e SPRING_DATASOURCE_PASSWORD=123456 \
+  -e APOLLO_PORTAL_ENVS=pro \
+  -e PRO_META=http://192.168.31.139:8081 \
+  -d -v /tmp/logs:/opt/logs \
+  --name apollo-portal apolloconfig/apollo-portal
+```
 
 
 
