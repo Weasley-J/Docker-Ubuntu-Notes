@@ -3746,7 +3746,7 @@ docker run --name nacos --restart=always \
   -e JVM_XMS="512m" \
   -e JVM_XMX="512m" \
   -e SPRING_DATASOURCE_PLATFORM="mysql" \
-  -e MYSQL_SERVICE_HOST="192.168.31.23" \
+  -e MYSQL_SERVICE_HOST="mysql" \
   -e MYSQL_SERVICE_PORT="3306" \
   -e MYSQL_SERVICE_DB_NAME="nacos" \
   -e MYSQL_SERVICE_USER="root" \
@@ -3762,7 +3762,7 @@ clear && docker logs -f nacos
 
 ```
 
-
+> `-e MYSQL_SERVICE_HOST="mysql"`表示：`nacos`和`mysql`共同使用一个网络`mynet`，如果不在同一个网络环境，写成ip: `  -e MYSQL_SERVICE_HOST="192.168.31.23"`
 
 ## 2.20 Docker安装sentinel
 
