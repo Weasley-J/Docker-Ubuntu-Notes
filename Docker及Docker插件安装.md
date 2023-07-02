@@ -588,8 +588,8 @@ docker ps -l
 ```shell
 #!/usr/bin/env bash
 
-current_version="2.18.2"
-old_version="2.16.2"
+current_version="2.18.3"
+old_version="2.18.2"
 
 docker stop portainer && docker rm -f portainer
 docker rmi portainer/portainer-ce:${old_version}
@@ -2297,7 +2297,7 @@ JDK的比较简单，**Maven的比较坑记录一下**
 
 > 踩坑背景：
 >
-> ​ Jenkins使用[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)
+>  Jenkins使用[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)
 > 和[Authorize Project](https://plugins.jenkins.io/authorize-project)
 >
 角色权限管理策略后，默认的Git远程触发构建会被权限插件拦截，导致我们提交代码到Git仓库后，Git发送POST请求给Jenkins服务器，Jenkins服务器响应403状态码，所以我们要解决这个问题，实现基于权限策略的Git提交代码后自动构建发布我们的项目到远程测试服务器。
@@ -2980,7 +2980,7 @@ docker run --name sonarqube --restart=always \
   -e JAVA_OPTS="-Xmx512m -Xms512m" \
   -e SONAR_JDBC_USERNAME=root \
   -e SONAR_JDBC_PASSWORD=123456 \
-  -e SONAR_JDBC_URL="jdbc:postgresql://${POSTGRESQL_HOST}:5432/sonarqube" \
+  -e SONAR_JDBC_URL="jdbc:postgresql://postgres:5432/sonarqube" \
   -v ${BASE_DIR_SONARQUBE}/data:/opt/sonarqube/data \
   -v ${BASE_DIR_SONARQUBE}/extensions:/opt/sonarqube/extensions \
   -v ${BASE_DIR_SONARQUBE}/logs:/opt/sonarqube/logs \
@@ -3975,7 +3975,7 @@ GRANT ALL ON db_demo.* TO lwj@'%';
 
 ```bash
 docker restart mariadb
-```
+  ```
 
 ## 2.24 Docker 运行 SQL Server
 
@@ -4472,12 +4472,12 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 
 ## 3.5 创建自定义网络环境解决同一宿主机上不同docker容器网络互通问题
 
-> ​ 建议使用自定义的网桥来控制哪些容器可以相互通信，还可以自动 DNS 解析容器名称到IP地址。Docker
+>  建议使用自定义的网桥来控制哪些容器可以相互通信，还可以自动 DNS 解析容器名称到IP地址。Docker
 > 提供了创建这些网络的默认网络驱动程序，你可以创建一个新的 Bridge 网络，Overlay 或 Macvlan 网络。你还可以创建一个网络插件或远程网络进行完整的自定义和控制。
 >
-> ​ 你可以根据需要创建任意数量的网络，并且可以在任何给定时间将容器连接到这些网络中的零个或多个网络。此外，您可以连接并断开网络中的运行容器，而无需重新启动容器。当容器连接到多个网络时，其外部连接通过第一个非内部网络以词法顺序提供。
+>  你可以根据需要创建任意数量的网络，并且可以在任何给定时间将容器连接到这些网络中的零个或多个网络。此外，您可以连接并断开网络中的运行容器，而无需重新启动容器。当容器连接到多个网络时，其外部连接通过第一个非内部网络以词法顺序提供。
 >
-> ​ 一个 Bridge 网络是 Docker 中最常用的网络类型。桥接网络类似于默认 Bridge
+>  一个 Bridge 网络是 Docker 中最常用的网络类型。桥接网络类似于默认 Bridge
 > 网络，但添加一些新功能并删除一些旧的能力。以下示例创建一些桥接网络，并对这些网络上的容器执行一些实验。
 
 ```shell
