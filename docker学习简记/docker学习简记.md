@@ -11,34 +11,35 @@ tags:
 
 ### 1）出现背景
 
-　　一款产品从开发到上线，从操作系统，到运行环境，再到应用配置。作为开发+运维之间的协作我们需要关心很多东西，这也是很多互联网公司都不得不面对的问题，特别是各种版本的迭代之后，不同版本环境的兼容，对运维人员都是考验Docker之所以发展如此迅速，也是因为它对此给出了一个标准化的解决方案。
-　　环境配置如此麻烦，换一台机器，就要重来一次，费力费时。很多人想到，能不能从根本上解决问题，软件可以带环境安装？也就是说，安装的时候，把原始环境一模一样地复制过来。开发人员利用 Docker 可以消除协作编码时“在我的机器上可正常工作”的问题。
+一款产品从开发到上线，从操作系统，到运行环境，再到应用配置。作为开发+运维之间的协作我们需要关心很多东西，这也是很多互联网公司都不得不面对的问题，特别是各种版本的迭代之后，不同版本环境的兼容，对运维人员都是考验Docker之所以发展如此迅速，也是因为它对此给出了一个标准化的解决方案。
+环境配置如此麻烦，换一台机器，就要重来一次，费力费时。很多人想到，能不能从根本上解决问题，软件可以带环境安装？也就是说，安装的时候，把原始环境一模一样地复制过来。开发人员利用
+Docker 可以消除协作编码时“在我的机器上可正常工作”的问题。
 
 ![image-20200405104610931](images/image-20200405104610931.png)
 
+之前在服务器配置一个应用的运行环境，要安装各种软件，安装和配置这些东西有多麻烦就不说了，它还不能跨平台。假如我们是在 Windows
+上安装的这些环境，到了 Linux 又得重新装。况且就算不跨操作系统，换另一台同样操作系统的服务器，要移植应用也是非常麻烦的。
 
-　　之前在服务器配置一个应用的运行环境，要安装各种软件，安装和配置这些东西有多麻烦就不说了，它还不能跨平台。假如我们是在 Windows 上安装的这些环境，到了 Linux 又得重新装。况且就算不跨操作系统，换另一台同样操作系统的服务器，要移植应用也是非常麻烦的。
-
-　　传统上认为，软件编码开发/测试结束后，所产出的成果即是程序或是能够编译执行的二进制字节码等(java为例)。而为了让这些程序可以顺利执行，开发团队也得准备完整的部署文件，让维运团队得以部署应用程式，开发需要清楚的告诉运维部署团队，用的全部配置文件+所有软件环境。不过，即便如此，仍然常常发生部署失败的状况。Docker镜像的设计，使得Docker得以打破过去「程序即应用」的观念。透过镜像(images)将作业系统核心除外，运作应用程式所需要的系统环境，由下而上打包，达到应用程式跨平台间的无缝接轨运作。
-
-
+传统上认为，软件编码开发/测试结束后，所产出的成果即是程序或是能够编译执行的二进制字节码等(java为例)
+。而为了让这些程序可以顺利执行，开发团队也得准备完整的部署文件，让维运团队得以部署应用程式，开发需要清楚的告诉运维部署团队，用的全部配置文件+所有软件环境。不过，即便如此，仍然常常发生部署失败的状况。Docker镜像的设计，使得Docker得以打破过去「程序即应用」的观念。透过镜像(
+images)将作业系统核心除外，运作应用程式所需要的系统环境，由下而上打包，达到应用程式跨平台间的无缝接轨运作。
 
 ### 2）docker理念
 
-　　Docker是基于Go语言实现的云开源项目。
-　　Docker的主要目标是“Build，Ship and Run Any App,Anywhere”，也就是通过对应用组件的封装、分发、部署、运行等生命周期的管理，使用户的APP（可以是一个WEB应用或数据库应用等等）及其运行环境能够做到“一次封装，到处运行”。
+Docker是基于Go语言实现的云开源项目。 Docker的主要目标是“Build，Ship and Run Any
+App,Anywhere”，也就是通过对应用组件的封装、分发、部署、运行等生命周期的管理，使用户的APP（可以是一个WEB应用或数据库应用等等）及其运行环境能够做到“一次封装，到处运行”。
 
 ![image-20200405105006525](images/image-20200405105006525.png)
 
-　　Linux 容器技术的出现就解决了这样一个问题，而 Docker 就是在它的基础上发展过来的。将应用运行在 Docker 容器上面，而 Docker 容器在任何操作系统上都是一致的，这就实现了跨平台、跨服务器。
-
-
+Linux 容器技术的出现就解决了这样一个问题，而 Docker 就是在它的基础上发展过来的。将应用运行在 Docker 容器上面，而 Docker
+容器在任何操作系统上都是一致的，这就实现了跨平台、跨服务器。
 
 ### 3）虚拟机技术和容器虚拟化技术
 
 1. 早期虚拟机技术
 
-　　虚拟机（virtual machine）就是带环境安装的一种解决方案。它可以在一种操作系统里面运行另一种操作系统，比如在Windows 系统里面运行Linux 系统。应用程序对此毫无感知，因为虚拟机看上去跟真实系统一模一样，而对于底层系统来说，虚拟机就是一个普通文件，不需要了就删掉，对其他部分毫无影响。这类虚拟机完美的运行了另一套系统，能够使应用程序，操作系统和硬件三者之间的逻辑不变。  
+虚拟机（virtual machine）就是带环境安装的一种解决方案。它可以在一种操作系统里面运行另一种操作系统，比如在Windows 系统里面运行Linux
+系统。应用程序对此毫无感知，因为虚拟机看上去跟真实系统一模一样，而对于底层系统来说，虚拟机就是一个普通文件，不需要了就删掉，对其他部分毫无影响。这类虚拟机完美的运行了另一套系统，能够使应用程序，操作系统和硬件三者之间的逻辑不变。
 
 <img src="images/image-20200405113305432.png" alt="image-20200405113305432" style="zoom:80%;" />
 
@@ -46,20 +47,19 @@ tags:
 
 虚拟机的缺点：
 
--  资源占用多     
+- 资源占用多
 - 冗余步骤多
 - 启动慢
 
 2. 容器虚拟化技术
 
-　　由于前面虚拟机存在这些缺点，Linux 发展出了另一种虚拟化技术：Linux 容器（Linux Containers，缩写为 LXC）。
-Linux 容器不是模拟一个完整的操作系统，而是对进程进行隔离。有了容器，就可以将软件运行所需的所有资源打包到一个隔离的容器中。容器与虚拟机不同，不需要捆绑一整套操作系统，只需要软件工作所需的库资源和设置。系统因此而变得高效轻量并保证部署在任何环境中的软件都能始终如一地运行。
+由于前面虚拟机存在这些缺点，Linux 发展出了另一种虚拟化技术：Linux 容器（Linux Containers，缩写为 LXC）。
+Linux
+容器不是模拟一个完整的操作系统，而是对进程进行隔离。有了容器，就可以将软件运行所需的所有资源打包到一个隔离的容器中。容器与虚拟机不同，不需要捆绑一整套操作系统，只需要软件工作所需的库资源和设置。系统因此而变得高效轻量并保证部署在任何环境中的软件都能始终如一地运行。
 
 ![image-20200405113415670](images/image-20200405113415670.png)
 
-
-
- Docker 和传统虚拟化方式的不同之处：
+Docker 和传统虚拟化方式的不同之处：
 
 * 传统虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统，在该系统上再运行所需应用进程；
 * 而容器内的应用进程直接运行于宿主的内核，容器内没有自己的内核，而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便。
@@ -68,23 +68,18 @@ Linux 容器不是模拟一个完整的操作系统，而是对进程进行隔�
 ### 4）为开发运维带来的便利
 
 1. 更快速的应用交付和部署
-传统的应用开发完成后，需要提供一堆安装程序和配置说明文档，安装部署后需根据配置文档进行繁杂的配置才能正常运行。Docker化之后只需要交付少量容器镜像文件，在正式生产环境加载镜像并运行即可，应用安装配置在镜像里已经内置好，大大节省部署配置和测试验证时间。
+   传统的应用开发完成后，需要提供一堆安装程序和配置说明文档，安装部署后需根据配置文档进行繁杂的配置才能正常运行。Docker化之后只需要交付少量容器镜像文件，在正式生产环境加载镜像并运行即可，应用安装配置在镜像里已经内置好，大大节省部署配置和测试验证时间。
 
 2. 更便捷的升级和扩缩容
-随着微服务架构和Docker的发展，大量的应用会通过微服务方式架构，应用的开发构建将变成搭乐高积木一样，每个Docker容器将变成一块“积木”，应用的升级将变得非常容易。当现有的容器不足以支撑业务处理时，可通过镜像运行新的容器进行快速扩容，使应用系统的扩容从原先的天级变成分钟级甚至秒级。
+   随着微服务架构和Docker的发展，大量的应用会通过微服务方式架构，应用的开发构建将变成搭乐高积木一样，每个Docker容器将变成一块“积木”，应用的升级将变得非常容易。当现有的容器不足以支撑业务处理时，可通过镜像运行新的容器进行快速扩容，使应用系统的扩容从原先的天级变成分钟级甚至秒级。
 
 3. 更简单的系统运维
 
-
-   应用容器化运行后，生产环境运行的应用可与开发、测试环境的应用高度一致，容器会将应用程序相关的环境和状态完全封装起来，不会因为底层基础架构和操作系统的不一致性给应用带来影响，产生新的BUG。当出现程序异常时，也可以通过测试环境的相同容器进行快速定位和修复。
+应用容器化运行后，生产环境运行的应用可与开发、测试环境的应用高度一致，容器会将应用程序相关的环境和状态完全封装起来，不会因为底层基础架构和操作系统的不一致性给应用带来影响，产生新的BUG。当出现程序异常时，也可以通过测试环境的相同容器进行快速定位和修复。
 
 4. 更高效的计算资源利用
 
    Docker是内核级虚拟化，其不像传统的虚拟化技术一样需要额外的Hypervisor支持，所以在一台物理机上可以运行很多个容器实例，可大大提升物理服务器的CPU和内存的利用率。
-
-
-
-
 
 **Docker**是一个开源的应用容器引擎；是一个轻量级容器技术；
 
@@ -92,15 +87,9 @@ Docker支持将软件编译成一个镜像；然后在镜像中各种软件做�
 
 运行中的这个镜像称为容器，容器启动是非常快速的。
 
-
-
 ![1571210424122](images/1571210424122.png)
 
-
-
 ![1571210454058](images/1571210454058.png)
-
-
 
 ### 5）docker的基本组成
 
@@ -120,7 +109,6 @@ Docker 利用容器（Container）独立运行的一个或一组应用。 容器
 
 #### 仓库（repository）
 
-
 仓库（Repository）是 集中存放镜像 文件的场所。
 
 仓库(Repository)和仓库注册服务器（Registry）是有区别的。仓库注册服务器上往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）。
@@ -131,19 +119,16 @@ Docker 利用容器（Container）独立运行的一个或一组应用。 容器
 
 存放了数量庞大的镜像供用户下载。国内的公开仓库包括阿里云 、网易云等.
 
-
-
 ### 6）docker的架构图
 
 <img src="images/image-20200405120649131.png" alt="image-20200405120649131" style="zoom:80%;" />
-
-
 
 ### 7）docker底层原理
 
 #### docker是怎样工作的
 
-Docker是一个Client-Server结构的系统，Docker守护进程运行在主机上， 然后通过Socket连接从客户端访问，守护进程从客户端接受命令并管理运行在主机上的容器。 容器，是一个运行时环境，就是我们前面说到的集装箱。
+Docker是一个Client-Server结构的系统，Docker守护进程运行在主机上， 然后通过Socket连接从客户端访问，守护进程从客户端接受命令并管理运行在主机上的容器。
+容器，是一个运行时环境，就是我们前面说到的集装箱。
 
 ![image-20200405165247044](images/image-20200405165247044.png)
 
@@ -151,17 +136,15 @@ Docker是一个Client-Server结构的系统，Docker守护进程运行在主机�
 
 1. docker有着比虚拟机更少的抽象层。由亍docker不需要Hypervisor实现硬件资源虚拟化,运行在docker容器上的程序直接使用的都是实际物理机的硬件资源。因此在CPU、内存利用率上docker将会在效率上有明显优势。
 
-2. docker利用的是宿主机的内核,而不需要Guest OS。因此,当新建一个容器时,docker不需要和虚拟机一样重新加载一个操作系统内核。仍而避免引寻、加载操作系统内核返个比较费时费资源的过程,当新建一个虚拟机时,虚拟机软件需要加载Guest OS,返个新建过程是分钟级别的。而docker由于直接利用宿主机的操作系统,则省略了返个过程,因此新建一个docker容器只需要几秒钟。
+2. docker利用的是宿主机的内核,而不需要Guest
+   OS。因此,当新建一个容器时,docker不需要和虚拟机一样重新加载一个操作系统内核。仍而避免引寻、加载操作系统内核返个比较费时费资源的过程,当新建一个虚拟机时,虚拟机软件需要加载Guest
+   OS,返个新建过程是分钟级别的。而docker由于直接利用宿主机的操作系统,则省略了返个过程,因此新建一个docker容器只需要几秒钟。
 
 <img src="images/image-20200405165415733.png" alt="image-20200405165415733" style="zoom: 80%;" />
 
 
 
 ![image-20200405165435522](images/image-20200405165435522.png)
-
-
-
-
 
 ## 2：Docker安装
 
@@ -177,8 +160,6 @@ CentOS Linux release 7.6.1810 (Core)
 [root@Linux5 ~]# 
 
 ```
-
-
 
 ### 1）安装gcc相关
 
@@ -199,8 +180,6 @@ yum -y install gcc-c++
                   docker-logrotate \
                   docker-engine
 ```
-
-
 
 ### 3）安装需要的软件包
 
@@ -239,8 +218,6 @@ Complete!
 
 ```
 
-
-
 ### 4）设置stable镜像仓库
 
 官方给出的是这个仓库,但是并不推荐使用它,因为速度慢
@@ -248,8 +225,6 @@ Complete!
 ```shell
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 ```
-
-
 
 推荐使用阿里云的镜像[仓库]( https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/ ):
 
@@ -290,8 +265,6 @@ Complete!
 [root@Linux6 ~]#
 ```
 
-
-
 ### 7）启动和停止docker
 
 ```shell
@@ -313,10 +286,6 @@ systemctl stop docker
 root     16425     1  0 01:53 ?        00:00:00 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 root     16598  9261  0 01:55 pts/0    00:00:00 grep --color=auto docker
 ```
-
-
-
-
 
 ### 8）测试
 
@@ -371,9 +340,7 @@ For more examples and ideas, visit:
 [root@Linux6 ~]# 
 ```
 
-
-
-更多安装详情见: https://docs.docker.com/install/linux/docker-ce/centos/ 
+更多安装详情见: https://docs.docker.com/install/linux/docker-ce/centos/
 
 ### 9）卸载docker
 
@@ -384,8 +351,6 @@ yum -y remove docker-ce
 
 rm -rf /var/lib/docker
 ```
-
-
 
 ## 3：Docker常用命令
 
@@ -447,9 +412,7 @@ Server:
 [root@Linux6 ~]# 
 ```
 
-
-
-2. docker --help 
+2. docker --help
 
 ```shell
 [root@Linux6 ~]# docker --help
@@ -536,8 +499,6 @@ Run 'docker COMMAND --help' for more information on a command.
 [root@Linux6 ~]# 
 ```
 
-
-
 ### 2）镜像命令
 
 #### docker images
@@ -552,13 +513,13 @@ docker.io/hello-world   latest              fce289e99eb9        15 months ago   
 [root@Linux5 ~]#
 ```
 
- **各个字段说明:**
+**各个字段说明:**
 
 - REPOSITORY：表示镜像的仓库源
 
 - TAG：镜像的标签
 
-   同一仓库源可以有多个 TAG，代表这个仓库源的不同个版本，我们使用 REPOSITORY:TAG 来定义不同的镜像。
+  同一仓库源可以有多个 TAG，代表这个仓库源的不同个版本，我们使用 REPOSITORY:TAG 来定义不同的镜像。
   如果不指定一个镜像的版本标签，例如只使用 ubuntu，docker 将默认使用 ubuntu:latest 镜像
 
 - IMAGE ID：镜像ID
@@ -567,14 +528,12 @@ docker.io/hello-world   latest              fce289e99eb9        15 months ago   
 
 - SIZE：镜像大小
 
-**OPTIONS说明：** 
+**OPTIONS说明：**
 
 - -a :列出本地所有的镜像（含中间映像层）
 - -q :只显示镜像ID
 - --digests :显示镜像的摘要信息
 - --no-trunc :显示完整的镜像信息
-
-
 
 #### docker search
 
@@ -586,19 +545,17 @@ docker search [OPTIONS] 镜像名字，如：
 
 这个命令的效果等同于在docker hub上查询对应镜像。
 
- OPTIONS说明：
+OPTIONS说明：
 
--  --no-trunc : 显示完整的镜像描述
--  -s : 列出收藏数不小于指定值的镜像
--  --automated : 只列出 automated build类型的镜像
-
-
+- --no-trunc : 显示完整的镜像描述
+- -s : 列出收藏数不小于指定值的镜像
+- --automated : 只列出 automated build类型的镜像
 
 #### docker pull
 
 作用：下载镜像
 
- **docker pull 镜像名字[:TAG]** 
+**docker pull 镜像名字[:TAG]**
 
 ```shell
 [root@Linux5 ~]# docker pull --help 
@@ -613,8 +570,6 @@ Options:
       --help                    Print usage
 [root@Linux5 ~]# 
 ```
-
-
 
 #### docker rmi
 
@@ -633,8 +588,6 @@ Options:
       --no-prune   Do not delete untagged parents
 [root@Linux5 ~]# 
 ```
-
-
 
 删除单个：docker rmi -f 镜像ID
 
@@ -658,9 +611,7 @@ REPOSITORY          TAG                 IMAGE ID            CREATED             
 centos              latest              470671670cac        2 months ago        237MB
 ```
 
-
-
-#### 1）新建并启动容器 
+#### 1）新建并启动容器
 
 ##### docker run
 
@@ -674,7 +625,7 @@ Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 Run a command in a new container
 ```
 
- OPTIONS说明（常用）：
+OPTIONS说明（常用）：
 
 - --name="容器新名字": 为容器指定一个名称；
 - -d: 后台运行容器，并返回容器ID，也即启动守护式容器；
@@ -682,12 +633,10 @@ Run a command in a new container
 - -t：为容器重新分配一个伪输入终端，通常与 -i 同时使用；
 - -P: 随机端口映射；
 - -p: 指定端口映射，有以下四种格式
-        ip:hostPort:containerPort
-        ip::containerPort
-        hostPort:containerPort
-        containerPort
-
-
+  ip:hostPort:containerPort
+  ip::containerPort
+  hostPort:containerPort
+  containerPort
 
 **docker run 命令原理：**
 
@@ -722,11 +671,7 @@ CentOS Linux release 8.1.1911 (Core)
 3.10.0-957.el7.x86_64
 ```
 
-
-
-
-
-#### 2）列出当前所有正在运行的容器 
+#### 2）列出当前所有正在运行的容器
 
 ##### docker ps
 
@@ -751,20 +696,14 @@ Options:
 
 ```
 
-
-
 **实例：列举出所有的容器信息**
 
 <img src="images/image-20200405175133998.png" alt="image-20200405175133998"  />
 
-
-
 #### 3）退出容器
 
-1.  exit 容器停止退出
-2.  ctrl+P+Q 容器不停止退出
-
-
+1. exit 容器停止退出
+2. ctrl+P+Q 容器不停止退出
 
 实例：在容器内执行exit退出容器
 
@@ -815,11 +754,9 @@ CONTAINER ID  IMAGE   COMMAND     CREATED        STATUS       PORTS NAMES
 f2caf0bce345  centos  "/bin/bash" 26 minutes ago Up 7 minutes       zen_kare
 ```
 
+#### 4）启动容器
 
-
-#### 4）启动容器 
-
- **docker start 容器ID或者容器名** 
+**docker start 容器ID或者容器名**
 
 ```shell
 [root@Linux6 ~]# docker start --help
@@ -835,11 +772,9 @@ Options:
 [root@Linux6 ~]# 
 ```
 
+#### 5）重启容器
 
-
-#### 5）重启容器 
-
-  **docker stop 容器ID或者容器名** 
+**docker stop 容器ID或者容器名**
 
 ```shell
 [root@Linux6 ~]# docker restart --help
@@ -853,11 +788,9 @@ Options:
 [root@Linux6 ~]# 
 ```
 
+#### 6）停止容器
 
-
-#### 6）停止容器 
-
-  **docker stop 容器ID或者容器名** 
+**docker stop 容器ID或者容器名**
 
 ```shell
 [root@Linux6 ~]# docker stop --help
@@ -877,11 +810,9 @@ Options:
  docker stop $(docker ps -a -q) //  stop停止所有容器
 ```
 
+#### 7）强制停止容器
 
-
-#### 7）强制停止容器 
-
- **docker kill 容器ID或者容器名** 
+**docker kill 容器ID或者容器名**
 
 ```shell
 [root@Linux6 ~]# docker kill --help
@@ -895,11 +826,9 @@ Options:
 [root@Linux6 ~]# 
 ```
 
+#### 8）删除已停止的容器
 
-
-#### 8）删除已停止的容器 
-
-**docker rm 容器ID** 
+**docker rm 容器ID**
 
 ```shell
 [root@Linux6 ~]# docker rm --help
@@ -915,14 +844,12 @@ Options:
 [root@Linux6 ~]# 
 ```
 
-  **一次性删除多个容器**
+**一次性删除多个容器**
 
--   docker rm -f $(docker ps -a -q)
--   docker ps -a -q | xargs docker rm
+- docker rm -f $(docker ps -a -q)
+- docker ps -a -q | xargs docker rm
 
-
-
-#### 9）启动守护式容器 
+#### 9）启动守护式容器
 
 使用镜像centos:latest以后台模式启动一个容器
 
@@ -936,8 +863,6 @@ docker run -d centos
 
 这是docker的机制问题，如web容器，以nginx为例，正常情况下，启动服务只需要启动响应的service即可。例如
 service nginx start，但是这样做nginx为后台进程模式运行，就导致docker前台没有运行的应用，容器后台启动后，就会因为空闲自动停止，所以最佳的解决方案是，将要运行的程序以前台进程的形式运行。
-
-
 
 实例：在后台运行centos容器
 
@@ -973,7 +898,7 @@ hello world!
 hello world!
 ```
 
-发现一直在界面上打印，根本没法操作。 建议使用后台模式和tty选项 
+发现一直在界面上打印，根本没法操作。 建议使用后台模式和tty选项
 
 ```shell
 #将centos放到后台，并且加上-it选项
@@ -991,8 +916,6 @@ hello world1！！
 ```
 
 参考链接： [docker容器保持运行不退出](https://blog.csdn.net/chivalrousli/article/details/86567809 )
-
-
 
 #### 10）查看容器日志
 
@@ -1013,14 +936,12 @@ Options:
 [root@Linux6 ~]# 
 ```
 
-
-
 docker logs -f -t --tail 容器ID
 
 * -t 是加入时间戳
-  
+
 * -f 跟随最新的日志打印
-  
+
 * --tail 数字 显示最后多少条
 
 实例：查看容器运行日志
@@ -1048,10 +969,6 @@ bf20a45ef81c centos "/bin/bash -c 'while…" 14 seconds ago Up 13 seconds    pea
 2020-04-05T11:19:53.592472490Z hello world!
 ```
 
-
-
-
-
 #### 11）查看容器内运行的进程
 
 ```shell
@@ -1063,8 +980,6 @@ Display the running processes of a container#显示容器内运行的进程
 [root@Linux6 ~]# 
 ```
 
-
-
 实例：查看前面所创建容器“bf20a45ef81c”中的进程
 
 ```shell
@@ -1074,11 +989,9 @@ root 10471 10455 0 07:17  ?   00:00:00 /bin/bash -c while true;do echo "hello wo
 root 10656 10471 0 07:21  ?   00:00:00 /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 2
 ```
 
-
-
 #### 12）查看容器内部细节
 
- **docker inspect 容器ID** 
+**docker inspect 容器ID**
 
 ```shell
 [root@Linux6 ~]# docker inspect --help
@@ -1093,8 +1006,6 @@ Options:
       --type string     Return JSON for specified type #以JSON形式返回
 [root@Linux6 ~]# 
 ```
-
-
 
 **实例：显示“bf20a45ef81c”的信息**
 
@@ -1117,11 +1028,7 @@ Options:
             ...
 ```
 
-
-
 #### 13）以交互方式进入运行的容器
-
-
 
 ```shell
 [root@Linux6 module]# docker exec --help
@@ -1143,8 +1050,6 @@ Options:
 
 ```
 
-
-
 docker exec -it 容器ID bashShell
 
 重新进入容器：docker attach 容器ID
@@ -1153,8 +1058,6 @@ dcoker attach和docker exec区别
 
 - docker attach 直接进入容器启动命令的终端，不会启动新的进程
 - docker exec 是在容器中打开新的终端，并且可以启动新的进程
-
-
 
 实例：进入到“bf20a45ef81c”容器中，查看它的根路径信息
 
@@ -1214,8 +1117,6 @@ tmpfs                    492M     0  492M   0% /sys/firmware
 [root@Linux6 module]# 
 ```
 
-
-
 另外也可以通过docker exe 也可以进入一个运行着的容器
 
 ```shell
@@ -1230,8 +1131,6 @@ tmpfs                    492M     0  492M   0% /sys/firmware
 root     13932 13172  0 08:57 pts/0    00:00:00 docker exec -it bf20a45ef81c /bin/bash
 ```
 
-
-
 **注意：对于docker exec和docker attach 而言，如果容器不存在，则会报错，也就是执行这两个命令之前，容器必须是存在的**
 
 ```shell
@@ -1244,9 +1143,9 @@ Error: No such container: centos
 
 #### 14）拷贝文件到宿主
 
- **docker cp 容器ID:容器内路径 目的主机路径** 
+**docker cp 容器ID:容器内路径 目的主机路径**
 
- **docker cp 宿主机路径 容器ID:容器目标路径** 
+**docker cp 宿主机路径 容器ID:容器目标路径**
 
 ```shell
 [root@Linux6 ~]# docker cp  --help
@@ -1268,10 +1167,6 @@ Options:
   -L, --follow-link   Always follow symbol link in SRC_PATH #始终遵循SRC_PATH中的符号链接
 [root@Linux6 ~]# 
 ```
-
-
-
-
 
 **实例1：将宿主机上的“ /opt/tmp/host.txt”文件拷贝的容器的“/opt”路径下**
 
@@ -1318,8 +1213,6 @@ hello docker
 [root@Linux6 tmp]
 ```
 
-
-
 **实例2：在容器中创建"/opt/container.txt "文件，然后拷贝到宿主机的“/opt/tmp/”目录下**
 
 ```shell
@@ -1348,8 +1241,6 @@ hello host,i am a container
 [root@Linux6 tmp]# 
 ```
 
-
-
 **实例3：使用tar的"-"，结合docker cp将宿主机上的文件拷贝到容器中**
 
 ```shell
@@ -1373,98 +1264,87 @@ total 16
 
 参考链接：[关于tar 命令中 - （stdin/stdout）的巧用]( https://blog.csdn.net/qq_39919755/article/details/91492265 )
 
-
-
 ### 4）docker常用命令
 
 <img src="images/image-20200405222146636.png" alt="image-20200405222146636" style="zoom: 67%;" />
 
+* attach Attach to a running container                 **# 当前 shell 下 attach 连接指定运行镜像**
 
+* build Build an image from a Dockerfile              **# 通过 Dockerfile 定制镜像**
 
+* commit Create a new image from a container changes   **# 提交当前容器为新的镜像**
 
-* attach  Attach to a running container                 **# 当前 shell 下 attach 连接指定运行镜像**
+* cp Copy files/folders from the containers filesystem to the host path   **#从容器中拷贝指定文件或者目录到宿主机**中
 
-* build   Build an image from a Dockerfile              **# 通过 Dockerfile 定制镜像**
+* create Create a new container                        **# 创建一个新的容器，同 run，但不启动容器**
 
-* commit  Create a new image from a container changes   **# 提交当前容器为新的镜像**
+* diff Inspect changes on a container's filesystem   **# 查看 docker 容器变化**
 
-* cp      Copy files/folders from the containers filesystem to the host path   **#从容器中拷贝指定文件或者目录到宿主机**中
+* events Get real time events from the server          **# 从 docker 服务获取容器实时事件**
 
-* create  Create a new container                        **# 创建一个新的容器，同 run，但不启动容器**
+* exec Run a command in an existing container        **# 在已存在的容器上运行命令**
 
-* diff    Inspect changes on a container's filesystem   **# 查看 docker 容器变化**
-
-* events  Get real time events from the server          **# 从 docker 服务获取容器实时事件**
-
-* exec    Run a command in an existing container        **# 在已存在的容器上运行命令**
-
-* export  Stream the contents of a container as a tar archive   **# 导出容器的内容流作为一个 tar 归档文件[对应 import ]**
+* export Stream the contents of a container as a tar archive   **# 导出容器的内容流作为一个 tar 归档文件[对应 import ]**
 
 * history Show the history of an image                  **# 展示一个镜像形成历史**
 
-* images  List images                                   **# 列出系统当前镜像**
+* images List images                                   **# 列出系统当前镜像**
 
-* import  Create a new filesystem image from the contents of a tarball **# 从tar包中的内容创建一个新的文件系统映像[对应export]**
+* import Create a new filesystem image from the contents of a tarball **#
+  从tar包中的内容创建一个新的文件系统映像[对应export]**
 
-* info    Display system-wide information               **# 显示系统相关信息**
+* info Display system-wide information               **# 显示系统相关信息**
 
 * inspect Return low-level information on a container   **# 查看容器详细信息**
 
-* kill    Kill a running container                      **# kill 指定 docker 容器**
+* kill Kill a running container                      **# kill 指定 docker 容器**
 
-* load    Load an image from a tar archive              **# 从一个 tar 包中加载一个镜像[对应 save]**
+* load Load an image from a tar archive              **# 从一个 tar 包中加载一个镜像[对应 save]**
 
-* login   Register or Login to the docker registry server    **# 注册或者登陆一个 docker 源服务器**
+* login Register or Login to the docker registry server    **# 注册或者登陆一个 docker 源服务器**
 
-* logout  Log out from a Docker registry server          **# 从当前 Docker registry 退出**
+* logout Log out from a Docker registry server          **# 从当前 Docker registry 退出**
 
-* logs    Fetch the logs of a container                 **# 输出当前容器日志信息**
+* logs Fetch the logs of a container                 **# 输出当前容器日志信息**
 
-* port    Lookup the public-facing port which is NAT-ed to PRIVATE_PORT    **# 查看映射端口对应的容器内部源端口**
+* port Lookup the public-facing port which is NAT-ed to PRIVATE_PORT    **# 查看映射端口对应的容器内部源端口**
 
-* pause   Pause all processes within a container        **# 暂停容器**
+* pause Pause all processes within a container        **# 暂停容器**
 
-* ps      List containers                               **# 列出容器列表**
+* ps List containers                               **# 列出容器列表**
 
-* pull    Pull an image or a repository from the docker registry server   **# 从docker镜像源服务器拉取指定镜像或者库镜像**
+* pull Pull an image or a repository from the docker registry server   **# 从docker镜像源服务器拉取指定镜像或者库镜像**
 
-* push    Push an image or a repository to the docker registry server    **# 推送指定镜像或者库镜像至docker源服务器**
+* push Push an image or a repository to the docker registry server    **# 推送指定镜像或者库镜像至docker源服务器**
 
 * restart Restart a running container                   **# 重启运行的容器**
 
-* rm      Remove one or more containers                 **# 移除一个或者多个容器**
+* rm Remove one or more containers                 **# 移除一个或者多个容器**
 
-* rmi     Remove one or more images             **# 移除一个或多个镜像[无容器使用该镜像才可删除，否则需删除相关容器才可继续或 -f 强制删除]**
+* rmi Remove one or more images             **#
+  移除一个或多个镜像[无容器使用该镜像才可删除，否则需删除相关容器才可继续或 -f 强制删除]**
 
-* run     Run a command in a new container              **# 创建一个新的容器并运行一个命令**
+* run Run a command in a new container              **# 创建一个新的容器并运行一个命令**
 
-* save    Save an image to a tar archive                **# 保存一个镜像为一个 tar 包[对应 load]**
+* save Save an image to a tar archive                **# 保存一个镜像为一个 tar 包[对应 load]**
 
-* search  Search for an image on the Docker Hub         **# 在 docker hub 中搜索镜像**
+* search Search for an image on the Docker Hub         **# 在 docker hub 中搜索镜像**
 
-* start   Start a stopped containers                    **# 启动容器**
+* start Start a stopped containers                    **# 启动容器**
 
-* stop    Stop a running containers                     **# 停止容器**
+* stop Stop a running containers                     **# 停止容器**
 
-* tag     Tag an image into a repository                **# 给源中镜像打标签**
+* tag Tag an image into a repository                **# 给源中镜像打标签**
 
-* top     Lookup the running processes of a container   **# 查看容器中运行的进程信息**
+* top Lookup the running processes of a container   **# 查看容器中运行的进程信息**
 
 * unpause Unpause a paused container                    **# 取消暂停容器**
 
 * version Show the docker version information           **# 查看 docker 版本号**
 
-* wait    Block until a container stops, then print its exit code   **# 截取容器停止时的退出状态值**
-
-
+* wait Block until a container stops, then print its exit code   **# 截取容器停止时的退出状态值**
 
 ## 4：Docker 镜像
-
-
-
-
-
-
 
 以交互方式进入到镜像中:
 
@@ -1483,25 +1363,17 @@ total 16
 如果想要让每秒钟和以追加的方式打印日志，则可以加上/t和/f参数。另外只看倒数第三行的日志：
 ![image-20200404165232853](images/image-20200404165232853.png)
 
-
-
 查看容器内运行的进程：
 
 ![image-20200404165357557](images/image-20200404165357557.png)
-
-
 
 问题:如何批量删除容器?
 
 ![image-20200404164037654](images/image-20200404164037654.png)
 
-
-
 docker inspect打印容器内部的细节，返回的是实际上是一个JSON串：
 
 ![image-20200404170434815](images/image-20200404170434815.png)
-
-
 
 docker exec：在外部之心命令，而不进入到容器中
 
@@ -1515,19 +1387,9 @@ docker attach进入一个运行着的docker容器：
 
 ![image-20200404170957780](images/image-20200404170957780.png)
 
-
-
 exec的功能要比attach强大一些，也就是它可以不进入到容器内就可以操作容器，而attach只能进入到容器内才能够操作容器。
 
-
-
 docker run -it和docker exec：前者是登录到容器内部，而后者是在外部执行命令，对于容器进行操作。
-
-
-
-
-
-
 
 容器一旦停止，容器内的数据就会丢失，为了持久化数据，可以将容器内的数据保存到宿主机上
 
@@ -1536,16 +1398,6 @@ docker run -it和docker exec：前者是登录到容器内部，而后者是在�
 上面的命令是将容器10b9a3内的数据（/tmp/yum.log），保存到宿主机的/root下。
 
 ![image-20200404171716800](images/image-20200404171716800.png)
-
-
-
-
-
-
-
-
-
-
 
 ## 5：Docker容器数据卷
 
@@ -1577,8 +1429,6 @@ volumesRW：说明可以对于容器的对应目录执行读写操作。
 
 再次启动容器（docker start container-id），查看容器内的目录宿主机的修改是否出现了。
 
-
-
 权限：
 
 ![image-20200404180403571](images/image-20200404180403571.png)
@@ -1595,11 +1445,7 @@ volumesRW：说明可以对于容器的对应目录执行读写操作。
 
 ![image-20200404181035262](images/image-20200404181035262.png)
 
-
-
 ## 6：DockerFile解析
-
-
 
 先来解答一个问题，为什么我们所pull的tomcat是4xxM的？
 
@@ -1608,8 +1454,6 @@ volumesRW：说明可以对于容器的对应目录执行读写操作。
 现在我们来到docker hub中，随机选择一个tomcat的版本，打开它的dockerFile描述信息
 
 ![image-20200404181356622](images/image-20200404181356622.png)
-
-
 
 为了理解上面的这些命令，就务必要了解到dockerFile的一些语法
 
@@ -1767,11 +1611,8 @@ EXPOSE 8080
 CMD ["catalina.sh", "run"]
 ```
 
-
-
 另外来看看redis的dockefile
 ![image-20200404182025445](images/image-20200404182025445.png)
-
 
 ```shell
 FROM debian:buster-slim
@@ -1893,23 +1734,15 @@ EXPOSE 6379
 CMD ["redis-server"]
 ```
 
-
-
 通过上面的内容，可以看出dockerFile是images的描述文件，正如java中类是被class所描述。
 
 在容器下创建一个mydocker文件夹，同时常见一个“/mydocker/Dockerfile”的文件
 
-
-
 ![image-20200404182422082](images/image-20200404182422082.png)
-
-
 
 “/mydocker/Dockerfile”中添加如下的内容：
 
 ![image-20200404182455700](images/image-20200404182455700.png)
-
-
 
 使用docker build命令运行
 
@@ -1919,21 +1752,13 @@ CMD ["redis-server"]
 
 ![image-20200404182923643](images/image-20200404182923643.png)
 
-
-
 运行这个镜像，查看到下面存在两个我们在Dockefile中所指定的目录
 
 ![image-20200404183029146](images/image-20200404183029146.png)
 
-
-
-
-
 创建容器dc01，在它的dataVolumeContainer2目录下创建一个名为“dc01_add.txt”的文件
 
 ![image-20200404185924956](images/image-20200404185924956.png)
-
-
 
 创建dc02容器，在该容器启动的时候添加--volumes-from 参数
 
@@ -1941,13 +1766,9 @@ CMD ["redis-server"]
 
 然后进入到dc02容器内能看到dc01所创建的文件，这样就实现类数据在容器之间的共享。
 
-
-
 创建dc03容器，并关联到dc03,然后在它的“dataVolumeContainer2”目录下，创建“dc03_add.txt”文件，
 
 ![image-20200404190321915](images/image-20200404190321915.png)
-
-
 
 那么在dc03容器中增加的文件是否会反映到dc01和dc02中呢？
 
@@ -1955,15 +1776,9 @@ CMD ["redis-server"]
 
 通过查看dc01的对应目录可以发现，的确是显示了这个文件。
 
-
-
-
-
-
-
 ### Centos的dockefile
 
-docker centos地址： https://hub.docker.com/search?q=centos&type=image  
+docker centos地址： https://hub.docker.com/search?q=centos&type=image
 
 这里选择的是centos7.7版本的
 
@@ -1985,31 +1800,13 @@ CMD ["/bin/bash"]
 * scratch：它是一个源镜像
 * LABEL
 
-
-
 dockefile的语法格式：
 
-![image-20200404191822792](images/image-20200404191822792.png) 
-
-
-
-
+![image-20200404191822792](images/image-20200404191822792.png)
 
 ## 7：Docker常用安装
+
 ## 8：本地镜像发布到阿里云
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## 2、核心概念
 
@@ -2037,7 +1834,7 @@ docker容器(Container)：镜像启动后的实例称为一个容器；容器是
 
 ## 3、安装Docker
 
- 在linux虚拟机上安装docker
+在linux虚拟机上安装docker
 
 步骤：
 
@@ -2062,12 +1859,12 @@ systemctl stop docker
 
 ### 1）、镜像操作
 
-| 操作 | 命令                                            | 说明                                                     |
-| ---- | ----------------------------------------------- | -------------------------------------------------------- |
+| 操作 | 命令                                          | 说明                                  |
+|----|---------------------------------------------|-------------------------------------|
 | 检索 | docker  search 关键字  eg：docker  search redis | 我们经常去docker  hub上检索镜像的详细信息，如镜像的TAG。 |
-| 拉取 | docker pull 镜像名:tag                          | :tag是可选的，tag表示标签，多为软件的版本，默认是latest  |
-| 列表 | docker images                                   | 查看所有本地镜像                                         |
-| 删除 | docker rmi image-id                             | 删除指定的本地镜像                                       |
+| 拉取 | docker pull 镜像名:tag                         | :tag是可选的，tag表示标签，多为软件的版本，默认是latest  |
+| 列表 | docker images                               | 查看所有本地镜像                            |
+| 删除 | docker rmi image-id                         | 删除指定的本地镜像                           |
 
 https://hub.docker.com/
 
@@ -2110,8 +1907,6 @@ https://docs.docker.com/engine/reference/commandline/docker/
 可以参考每一个镜像的文档
 
 ```
-
-
 
 ### 3）、安装MySQL示例
 
@@ -2160,8 +1955,6 @@ ad10e4bc5c6a0f61cbad43898de71d366117d120e39db651844c0e73863b9434
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 ad10e4bc5c6a        mysql               "docker-entrypoint.sh"   4 seconds ago       Up 2 seconds        0.0.0.0:3306->3306/tcp   mysql02
 ```
-
-
 
 几个其他的高级操作
 
@@ -2224,8 +2017,6 @@ mysql>flush privileges;
 
 ```
 
-
-
 ![1571220062790](images/1571220062790.png)
 
 is not allowed to connecte to this Mysql server，在前面的操作后要重启一下mysql容器。
@@ -2249,8 +2040,6 @@ docker.io/mysql     latest              b6487d0ec59e        13 hours ago        
 [root@Linux4 software]# docker save -o mysql5.7.tar docker.io/mysql
 ```
 
-
-
 ### 2)、拷贝镜像到另外一台设备
 
 ```shell
@@ -2259,17 +2048,15 @@ docker.io/mysql     latest              b6487d0ec59e        13 hours ago        
 [root@Linux4 software]# 
 ```
 
+### 3)、在另外一台设备上加载镜像
 
-
-###  3)、在另外一台设备上加载镜像
-
-加载镜像：加载方式有两种，docker load --input 文件   docker load <  文件名
+加载镜像：加载方式有两种，docker load --input 文件 docker load <  文件名
 
 ```shell
 [root@Linux5 software]#  docker load --input mysql5.7.tar
 ```
 
-###  4)、在另外一台设备上运行镜像
+### 4)、在另外一台设备上运行镜像
 
 ```shell
 
@@ -2286,19 +2073,16 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 [root@Linux5 software]# docker exec -it 5214efd157dc /bin/bash
 ```
 
-
-
 ## 6、Docker基本概念
 
-###  
-
-
+###   
 
 ## 7、制作自己的docker镜像
 
 ### 1)、阿里云docker管理平台创建仓库
 
-进入[阿里云镜像服务控制台](https://cr.console.aliyun.com/?spm=5176.166170.863063.btn1cr3.5bb8217f9bKZ7S#/imageList)，新建镜像仓库，如图
+进入[阿里云镜像服务控制台](https://cr.console.aliyun.com/?spm=5176.166170.863063.btn1cr3.5bb8217f9bKZ7S#/imageList)
+，新建镜像仓库，如图
 
 ![1571238872879](images/1571238872879.png)
 
@@ -2312,7 +2096,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 <img src="images/image-20200405164136066.png" alt="image-20200405164136066" style="zoom: 67%;" />
 
-*  粘贴上面框选部分到Linux终端
+* 粘贴上面框选部分到Linux终端
 
 ```shell
 [root@Linux6 ~]# sudo mkdir -p /etc/docker
@@ -2343,8 +2127,6 @@ sudo systemctl restart docker{
 [root@Linux6 ~]# 
 ```
 
-
-
 ### 3）、推送镜像到阿里云上
 
 手动构建Docker镜像
@@ -2364,11 +2146,7 @@ docker.io/centos    latest              0f3e07c0138f        2 weeks ago         
 
 ![1571243243055](images/1571243243055.png)
 
-
-
 更多使用方法见博客：<https://blog.csdn.net/weixin_40475396/article/details/80423980>
-
-
 
 ## 其他
 
@@ -2392,10 +2170,6 @@ docker和虚拟机共享文件，docker和VM之间如何相互传输文件？
 
 现在需要安装的jdk是一个本地已经下载好了的jdk，如何将这个jdk安装到VM的docker中？
 
-
-
-
-
 可能不需要将本地文件上传到docker，直接基于分层策略
 
 当以docker exec -it方式运行tomcat镜像的时候，为什么会出现/usr/local/tomcat目录？这个目录是做什么用的？
@@ -2414,23 +2188,15 @@ docker ps查看所有运行的容器，docker ps -a：查看所有运行容器�
 
 ![1571324179248](images/1571324179248.png)
 
-
-
 docker采用分层的概念，所有的操作都是在内存中进行的，这也是为什么上面删除了doc文件之后，停止了docker再次查看文件已经存在的原因。
 
 ![1571324977030](images/1571324977030.png)
 
-
-
 现在就给定了一种思路，如果我不想修改原来的镜像，而是在原来的镜像操作后，直接commit保存到新的版本镜像上，这样就能够实现既不修改原来的镜像，也能够保存配置。
-
-
 
 拷贝数据到目标主机：
 
 ![1571325224171](images/1571325224171.png)
-
-
 
 拷贝数据到容器：
 
@@ -2438,7 +2204,7 @@ docker采用分层的概念，所有的操作都是在内存中进行的，这�
 
 ![1571325974051](images/1571325974051.png)
 
-“docker inspect  容器ID” 的显示效果：
+“docker inspect 容器ID” 的显示效果：
 
 ![1571325905181](images/1571325905181.png)
 
@@ -2456,23 +2222,9 @@ docker attach是什么操作，它和exec有什么区别？
 
 前面所提及到的登录的时候，进入到了usr/local/tomcat目录，就是这里定义的。
 
-
-
-
-
-
-
 考虑是否要将Haoop安装进入到Docker中的Centos，因为在Docker中是centos是一个精简版的centos，会有很多命令无法运行，这样显然是不行的。考虑解决办法，查看博客中别人是如何不是Hadoop集群的
 
-
-
-
-
 另外可以不需要通过“”拷贝当前镜像的方式，构建新的image，只需要进行执行dockerfiles
-
-
-
-
 
 可以非交互方式，直接执行容器的命令：
 
@@ -2480,17 +2232,11 @@ docker attach是什么操作，它和exec有什么区别？
 
 ![1571330188554](images/1571330188554.png)
 
-
-
 docker 重命名镜像：
 
 <https://blog.csdn.net/jiangyu1013/article/details/84338359>
 
-
-
 使用上的一个小问题，在使用Docker mysql的时候，所创建的数据库，在容器关闭后，下次再次启动时，数据也就丢失了，该要如何解决这个问题呢？
-
-
 
 ### Docker和Kubernetes的区别？
 
@@ -2498,7 +2244,8 @@ docker 重命名镜像：
 
 ### 3. 关于`/var/lib/docker/`
 
- The contents of `/var/lib/docker/`, including images, containers, volumes, and networks, are preserved. The Docker Engine - Community package is now called `docker-ce`. 
+The contents of `/var/lib/docker/`, including images, containers, volumes, and networks, are preserved. The Docker
+Engine - Community package is now called `docker-ce`.
 
 `/var/lib/docker/`下包含了一些镜像，容器，卷和网络的相关配置信息。docker的社区引擎包现在称为docker-ce.
 
@@ -2506,11 +2253,10 @@ docker 重命名镜像：
 
 ### 5. 在docker中安装的Redis，没有经过配置，也没有指定配置文件它是怎样运行的？
 
-为了能够以后这个redis一直都可以携带配置文件，可以让redis的容器导出为新的redis镜像，这种想法来源于前面的实例中，将tomcat的doc部分删除，然后保存为tomcat:1.2的想法。
+为了能够以后这个redis一直都可以携带配置文件，可以让redis的容器导出为新的redis镜像，这种想法来源于前面的实例中，将tomcat的doc部分删除，然后保存为tomcat:
+1.2的想法。
 
 ![image-20200404173815710](images/image-20200404173815710.png)
-
-
 
 实际上通过容器卷，提供了另外的一种选择，在宿主机上行创建redis.conf文件，然后再启动redis容器的时候，创建数据卷，这样就可以通过修改reids.conf文件，来在不同的端口上启动redis了。
 
@@ -2522,17 +2268,7 @@ docker 重命名镜像：
 
 前面表示容器卷，后面表示宿主机内的路径。
 
-
-
-
-
-
-
 ### 6. 查看Hello world的dockerfile
-
-
-
-
 
 ### 7. dokcer中安装nginx
 

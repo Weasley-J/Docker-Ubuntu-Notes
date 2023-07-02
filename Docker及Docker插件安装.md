@@ -1,7 +1,3 @@
-
-
-
-
 **本文基于 Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-52-generic x86_64) 实践**
 
 # 1 Docker安装与卸载
@@ -65,7 +61,7 @@ sudo systemctl daemon-reload
 > sudo apt-get -y install   #参数: -y，自动填写Y,  安装时不需要用户输入Y进行确认
 > ```
 >
-> 
+>
 
 ```shell
 #!/usr/bin/env bash
@@ -90,8 +86,6 @@ sudo systemctl daemon-reload
 
 ```
 
-
-
 ## 1.2  开始安装
 
 ### 1.2.1 Install Docker Engine on Ubuntu by Official
@@ -110,9 +104,15 @@ sudo apt-get remove docker docker-engine docker.io containerd runc
 
 You can install Docker Engine in different ways, depending on your needs:
 
-- Most users [set up Docker’s repositories](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) and install from them, for ease of installation and upgrade tasks. This is the recommended approach.
-- Some users download the DEB package and [install it manually](https://docs.docker.com/engine/install/ubuntu/#install-from-a-package) and manage upgrades completely manually. This is useful in situations such as installing Docker on air-gapped systems with no access to the internet.
-- In testing and development environments, some users choose to use automated [convenience scripts](https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script) to install Docker.
+- Most users [set up Docker’s repositories](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+  and install from them, for ease of installation and upgrade tasks. This is the recommended approach.
+- Some users download the DEB package
+  and [install it manually](https://docs.docker.com/engine/install/ubuntu/#install-from-a-package) and manage upgrades
+  completely manually. This is useful in situations such as installing Docker on air-gapped systems with no access to
+  the internet.
+- In testing and development environments, some users choose to use
+  automated [convenience scripts](https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script)
+  to install Docker.
 
 #### 1.2.3.1 使用[repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)安装
 
@@ -135,7 +135,8 @@ sudo apt-get -y install \
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 ```
 
-3. Verify that you now have the key with the fingerprint `9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88`, by searching for the last 8 characters of the fingerprint.
+3. Verify that you now have the key with the fingerprint `9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88`, by
+   searching for the last 8 characters of the fingerprint.
 
 ```shell
 sudo apt-key fingerprint 0EBFCD88
@@ -143,7 +144,9 @@ sudo apt-key fingerprint 0EBFCD88
 
 ![image-20201104231558195](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201104231558195.png)
 
-4. Use the following command to set up the **stable** repository. To add the **nightly** or **test** repository, add the word `nightly` or `test` (or both) after the word `stable` in the commands below. [Learn about **nightly** and **test** channels](https://docs.docker.com/engine/install/).
+4. Use the following command to set up the **stable** repository. To add the **nightly** or **test** repository, add the
+   word `nightly` or `test` (or both) after the word `stable` in the commands below. [Learn about **nightly** and **test
+   ** channels](https://docs.docker.com/engine/install/).
 
    ***下面三个选择对应自己机器的版本***
 
@@ -155,7 +158,7 @@ sudo apt-key fingerprint 0EBFCD88
    > sudo uname -a
    > ```
    >
-   > 
+   >
    >
    > ![image-20201104232800258](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201104232800258.png)
    >
@@ -170,7 +173,6 @@ sudo apt-key fingerprint 0EBFCD88
    >
    > ![image-20201104233330267](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201104233330267.png)
 
-   
 
 - **x86_64 / amd64**
 
@@ -192,8 +194,6 @@ sudo add-apt-repository \
    stable"
 ```
 
-
-
 - **arm64**
 
 官方源:
@@ -213,8 +213,6 @@ sudo add-apt-repository \
    $(lsb_release -cs) \
    stable"
 ```
-
-
 
 - **armhf**
 
@@ -236,11 +234,10 @@ sudo add-apt-repository \
    stable"
 ```
 
-
-
 #### 1.2.3.2 安装Docker Engine
 
-Update the `apt` package index, and install the *latest version* of Docker Engine and containerd, or go to the next step to install a specific version:
+Update the `apt` package index, and install the *latest version* of Docker Engine and containerd, or go to the next step
+to install a specific version:
 
 ```shell
 sudo apt-get -y update
@@ -279,7 +276,8 @@ sudo systemctl enable docker.service
 sudo apt-get purge docker-ce docker-ce-cli containerd.io
 ```
 
-2. Images, containers, volumes, or customized configuration files on your host are not automatically removed. To delete all images, containers, and volumes:
+2. Images, containers, volumes, or customized configuration files on your host are not automatically removed. To delete
+   all images, containers, and volumes:
 
 ```shell
 sudo rm -rfv /var/lib/docker
@@ -317,8 +315,6 @@ sudo chmod -v 0777 ~/docker_restart.sh
 sudo systemctl daemon-reload
 ```
 
-
-
 ## 1.7 通过netstat输出审查，确认dockerd的端口是否配置上
 
 ```shell
@@ -326,8 +322,6 @@ sudo netstat -lntp | grep dockerd
 ```
 
 ![image-20201104230342131](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201104230342131-1604502232761.png)
-
-
 
 # 2 Docker常用插件安装
 
@@ -373,8 +367,6 @@ exit
 docker rm -f ubuntu
 ```
 
-
-
 ## 2.2 安装Oracle JDK镜像
 
 先把Oracle JDK下载上传至服务器的指定位置，一般是：/usr/local/jdk
@@ -385,9 +377,7 @@ cd /usr/local/jdk
 # 上传jdk到此目录
 ```
 
-
-
-### 2.2.1 安装jdk1.8 
+### 2.2.1 安装jdk1.8
 
 - 编写Dockerfile（Dockerfile-jdk1.8）
 
@@ -442,13 +432,9 @@ docker rm -f jdk8 && docker run -it --name jdk8 ${IMAGE_NAME}:${IMAGE_VERSION} b
 
 ```
 
-
-
 校验结果：
 
 ![image-20201113153026694](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201113153026694.png)
-
-
 
 ### 2.2.2 安装jdk11
 
@@ -504,19 +490,18 @@ docker rm -f jdk11 && docker run -it --name jdk11 ${JDK_IMAGE}:${IMAGE_VERSION} 
 
 ```
 
-
-
 结果校验：
 
 ![image-20201113154651943](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201113154651943.png)
-
-
 
 ## 2.2.a Docker安装portainer图形化界面
 
 > 介绍
 
- Docker 图形化管理提供了很多工具，有Portainer、Docker UI、Shipyard等等，本文主要介绍Portainer。 Portainer是一个开源、轻量级Docker管理用户界面，基于Docker API，提供状态显示面板、应用模板快速部署、 容器镜像网络数据卷的基本操作（包括上传下载镜像，创建容器等操作）、事件日志显示、容器控制台操作、 Swarm集群和服务等集中管理和操作、登录用户管理和控制等功能。功能十分全面，基本能满足中小型单位对容器管理的全部需求。
+Docker 图形化管理提供了很多工具，有Portainer、Docker UI、Shipyard等等，本文主要介绍Portainer。
+Portainer是一个开源、轻量级Docker管理用户界面，基于Docker API，提供状态显示面板、应用模板快速部署、
+容器镜像网络数据卷的基本操作（包括上传下载镜像，创建容器等操作）、事件日志显示、容器控制台操作、
+Swarm集群和服务等集中管理和操作、登录用户管理和控制等功能。功能十分全面，基本能满足中小型单位对容器管理的全部需求。
 
 > 安装
 
@@ -553,17 +538,17 @@ docker run --name portainer \
 
 > **参数说明**
 >
-> -d                                                              #容器在后台运行
+> -d #容器在后台运行
 >
-> --restart=always                                     #docker服务启动后容器自启动
+> --restart=always #docker服务启动后容器自启动
 >
-> -p 9000:9000                                           #宿主机9000端口映射容器中的9000端口
+> -p 9000:9000 #宿主机9000端口映射容器中的9000端口
 >
-> -v portainer_data:/data                         #把宿主机portainer_data数据卷挂载到容器/data目录
+> -v portainer_data:/data #把宿主机portainer_data数据卷挂载到容器/data目录
 >
-> -v /etc/timezone:/etc/timezone \         #将宿主机的时区绑定到容器中，容器时区就会跟宿主机一样
+> -v /etc/timezone:/etc/timezone \ #将宿主机的时区绑定到容器中，容器时区就会跟宿主机一样
 >
-> -v /etc/localtime:/etc/localtime \          #将宿主机的时间绑定到容器中，容器时间就会跟宿主机一样
+> -v /etc/localtime:/etc/localtime \ #将宿主机的时间绑定到容器中，容器时间就会跟宿主机一样
 
 ```shell
 #把宿主机的Docker守护进程(Docker daemon)默认监听的Unix域套接字挂载到容器中
@@ -589,8 +574,6 @@ docker ps -l
 官方网站：https://portainer.io/
 官方文档：https://portainer.readthedocs.io/
 演示网址：http://demo.portainer.io ；账号: admin, 密码: tryportainer
-
-
 
 ## 2.2.b Docker安装portainer-ce图形化界面
 
@@ -639,8 +622,6 @@ clear && docker logs -f portainer
 http://192.168.40.132:9000
 
 ![image-20201110133818826](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201110133818826.png)
-
-
 
 ## 2.3 Docker安装RabbitMQ
 
@@ -713,12 +694,10 @@ docker top rabbitmq
 
 - 启动容器后，可以浏览器中访问http://虚拟机或者服务器ip:15672/ 来查看控制台信息
 - RabbitMQ默认的用户名：guest，密码：guest
--  这里使用创建RabbitMQ容器时指定的用户名:admin, 密码: 123456
+- 这里使用创建RabbitMQ容器时指定的用户名:admin, 密码: 123456
 
 - 浏览器中访问，启动RabbitMQ UI界面:
   http://192.168.40.132:15672/
-
-
 
 ## 2.4 Docker安装springcloud链路追踪zipkin
 
@@ -732,54 +711,77 @@ docker top rabbitmq
 DROP DATABASE IF EXISTS `zipkin`;
 CREATE DATABASE `zipkin` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
 USE `zipkin`;
-CREATE TABLE IF NOT EXISTS zipkin_spans (
-  `trace_id_high` BIGINT NOT NULL DEFAULT 0 COMMENT 'If non zero, this means the trace uses 128 bit traceIds instead of 64 bit',
-  `trace_id` BIGINT NOT NULL,
-  `id` BIGINT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `remote_service_name` VARCHAR(255),
-  `parent_id` BIGINT,
-  `debug` BIT(1),
-  `start_ts` BIGINT COMMENT 'Span.timestamp(): epoch micros used for endTs query and to implement TTL',
-  `duration` BIGINT COMMENT 'Span.duration(): micros used for minDuration and maxDuration query',
-  PRIMARY KEY (`trace_id_high`, `trace_id`, `id`)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARACTER SET=utf8 COLLATE utf8_general_ci;
+CREATE TABLE IF NOT EXISTS zipkin_spans
+(
+    `trace_id_high`       BIGINT       NOT NULL DEFAULT 0 COMMENT 'If non zero, this means the trace uses 128 bit traceIds instead of 64 bit',
+    `trace_id`            BIGINT       NOT NULL,
+    `id`                  BIGINT       NOT NULL,
+    `name`                VARCHAR(255) NOT NULL,
+    `remote_service_name` VARCHAR(255),
+    `parent_id`           BIGINT,
+    `debug`               BIT(1),
+    `start_ts`            BIGINT COMMENT 'Span.timestamp(): epoch micros used for endTs query and to implement TTL',
+    `duration`            BIGINT COMMENT 'Span.duration(): micros used for minDuration and maxDuration query',
+    PRIMARY KEY (`trace_id_high`, `trace_id`, `id`)
+) ENGINE = InnoDB
+  ROW_FORMAT = COMPRESSED
+  CHARACTER SET = utf8
+  COLLATE utf8_general_ci;
 
-ALTER TABLE zipkin_spans ADD INDEX(`trace_id_high`, `trace_id`) COMMENT 'for getTracesByIds';
-ALTER TABLE zipkin_spans ADD INDEX(`name`) COMMENT 'for getTraces and getSpanNames';
-ALTER TABLE zipkin_spans ADD INDEX(`remote_service_name`) COMMENT 'for getTraces and getRemoteServiceNames';
-ALTER TABLE zipkin_spans ADD INDEX(`start_ts`) COMMENT 'for getTraces ordering and range';
+ALTER TABLE zipkin_spans
+    ADD INDEX (`trace_id_high`, `trace_id`) COMMENT 'for getTracesByIds';
+ALTER TABLE zipkin_spans
+    ADD INDEX (`name`) COMMENT 'for getTraces and getSpanNames';
+ALTER TABLE zipkin_spans
+    ADD INDEX (`remote_service_name`) COMMENT 'for getTraces and getRemoteServiceNames';
+ALTER TABLE zipkin_spans
+    ADD INDEX (`start_ts`) COMMENT 'for getTraces ordering and range';
 
-CREATE TABLE IF NOT EXISTS zipkin_annotations (
-  `trace_id_high` BIGINT NOT NULL DEFAULT 0 COMMENT 'If non zero, this means the trace uses 128 bit traceIds instead of 64 bit',
-  `trace_id` BIGINT NOT NULL COMMENT 'coincides with zipkin_spans.trace_id',
-  `span_id` BIGINT NOT NULL COMMENT 'coincides with zipkin_spans.id',
-  `a_key` VARCHAR(255) NOT NULL COMMENT 'BinaryAnnotation.key or Annotation.value if type == -1',
-  `a_value` BLOB COMMENT 'BinaryAnnotation.value(), which must be smaller than 64KB',
-  `a_type` INT NOT NULL COMMENT 'BinaryAnnotation.type() or -1 if Annotation',
-  `a_timestamp` BIGINT COMMENT 'Used to implement TTL; Annotation.timestamp or zipkin_spans.timestamp',
-  `endpoint_ipv4` INT COMMENT 'Null when Binary/Annotation.endpoint is null',
-  `endpoint_ipv6` BINARY(16) COMMENT 'Null when Binary/Annotation.endpoint is null, or no IPv6 address',
-  `endpoint_port` SMALLINT COMMENT 'Null when Binary/Annotation.endpoint is null',
-  `endpoint_service_name` VARCHAR(255) COMMENT 'Null when Binary/Annotation.endpoint is null'
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARACTER SET=utf8 COLLATE utf8_general_ci;
+CREATE TABLE IF NOT EXISTS zipkin_annotations
+(
+    `trace_id_high`         BIGINT       NOT NULL DEFAULT 0 COMMENT 'If non zero, this means the trace uses 128 bit traceIds instead of 64 bit',
+    `trace_id`              BIGINT       NOT NULL COMMENT 'coincides with zipkin_spans.trace_id',
+    `span_id`               BIGINT       NOT NULL COMMENT 'coincides with zipkin_spans.id',
+    `a_key`                 VARCHAR(255) NOT NULL COMMENT 'BinaryAnnotation.key or Annotation.value if type == -1',
+    `a_value`               BLOB COMMENT 'BinaryAnnotation.value(), which must be smaller than 64KB',
+    `a_type`                INT          NOT NULL COMMENT 'BinaryAnnotation.type() or -1 if Annotation',
+    `a_timestamp`           BIGINT COMMENT 'Used to implement TTL; Annotation.timestamp or zipkin_spans.timestamp',
+    `endpoint_ipv4`         INT COMMENT 'Null when Binary/Annotation.endpoint is null',
+    `endpoint_ipv6`         BINARY(16) COMMENT 'Null when Binary/Annotation.endpoint is null, or no IPv6 address',
+    `endpoint_port`         SMALLINT COMMENT 'Null when Binary/Annotation.endpoint is null',
+    `endpoint_service_name` VARCHAR(255) COMMENT 'Null when Binary/Annotation.endpoint is null'
+) ENGINE = InnoDB
+  ROW_FORMAT = COMPRESSED
+  CHARACTER SET = utf8
+  COLLATE utf8_general_ci;
 
-ALTER TABLE zipkin_annotations ADD UNIQUE KEY(`trace_id_high`, `trace_id`, `span_id`, `a_key`, `a_timestamp`) COMMENT 'Ignore insert on duplicate';
-ALTER TABLE zipkin_annotations ADD INDEX(`trace_id_high`, `trace_id`, `span_id`) COMMENT 'for joining with zipkin_spans';
-ALTER TABLE zipkin_annotations ADD INDEX(`trace_id_high`, `trace_id`) COMMENT 'for getTraces/ByIds';
-ALTER TABLE zipkin_annotations ADD INDEX(`endpoint_service_name`) COMMENT 'for getTraces and getServiceNames';
-ALTER TABLE zipkin_annotations ADD INDEX(`a_type`) COMMENT 'for getTraces and autocomplete values';
-ALTER TABLE zipkin_annotations ADD INDEX(`a_key`) COMMENT 'for getTraces and autocomplete values';
-ALTER TABLE zipkin_annotations ADD INDEX(`trace_id`, `span_id`, `a_key`) COMMENT 'for dependencies job';
+ALTER TABLE zipkin_annotations
+    ADD UNIQUE KEY (`trace_id_high`, `trace_id`, `span_id`, `a_key`, `a_timestamp`) COMMENT 'Ignore insert on duplicate';
+ALTER TABLE zipkin_annotations
+    ADD INDEX (`trace_id_high`, `trace_id`, `span_id`) COMMENT 'for joining with zipkin_spans';
+ALTER TABLE zipkin_annotations
+    ADD INDEX (`trace_id_high`, `trace_id`) COMMENT 'for getTraces/ByIds';
+ALTER TABLE zipkin_annotations
+    ADD INDEX (`endpoint_service_name`) COMMENT 'for getTraces and getServiceNames';
+ALTER TABLE zipkin_annotations
+    ADD INDEX (`a_type`) COMMENT 'for getTraces and autocomplete values';
+ALTER TABLE zipkin_annotations
+    ADD INDEX (`a_key`) COMMENT 'for getTraces and autocomplete values';
+ALTER TABLE zipkin_annotations
+    ADD INDEX (`trace_id`, `span_id`, `a_key`) COMMENT 'for dependencies job';
 
-CREATE TABLE IF NOT EXISTS zipkin_dependencies (
-  `day` DATE NOT NULL,
-  `parent` VARCHAR(255) NOT NULL,
-  `child` VARCHAR(255) NOT NULL,
-  `call_count` BIGINT,
-  `error_count` BIGINT,
-  PRIMARY KEY (`day`, `parent`, `child`)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARACTER SET=utf8 COLLATE utf8_general_ci;
+CREATE TABLE IF NOT EXISTS zipkin_dependencies
+(
+    `day`         DATE         NOT NULL,
+    `parent`      VARCHAR(255) NOT NULL,
+    `child`       VARCHAR(255) NOT NULL,
+    `call_count`  BIGINT,
+    `error_count` BIGINT,
+    PRIMARY KEY (`day`, `parent`, `child`)
+) ENGINE = InnoDB
+  ROW_FORMAT = COMPRESSED
+  CHARACTER SET = utf8
+  COLLATE utf8_general_ci;
 
 ```
 
@@ -817,11 +819,9 @@ docker run --name zipkin \
   -d openzipkin/zipkin
 ```
 
-
-
 ### 2.4.3 浏览器访问验证
 
-- 浏览器访问验证, ip自行修改,访问不了,  注意防火强是否打开
+- 浏览器访问验证, ip自行修改,访问不了, 注意防火强是否打开
   http://192.168.1.142:9411/
 
 ## 2.5 Docker安装ElasticSearch
@@ -1031,8 +1031,6 @@ clear && docker logs -f elasticsearch
 curl http://127.0.0.1:9200
 ```
 
-
-
 > 参数说明
 >
 > --name elasticsearch：将容器命名为 elasticsearch
@@ -1043,11 +1041,12 @@ curl http://127.0.0.1:9200
 > -e ES_JAVA_OPTS="-Xms64m -Xmx128m"：配置JVM内存大小
 > -v /usr/local/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml：将配置文件挂载到宿主机
 > -v /usr/local/elasticsearch/data:/usr/share/elasticsearch/data：将数据文件夹挂载到宿主机
-> -v /usr/local/elasticsearch/logs:/usr/share/elasticsearch/logs:     将elasticsearch容器的logs文件夹挂载到宿主机/usr/local/elasticsearch/logs
+> -v /usr/local/elasticsearch/logs:/usr/share/elasticsearch/logs:
+> 将elasticsearch容器的logs文件夹挂载到宿主机/usr/local/elasticsearch/logs
 > -v /usr/local/elasticsearch/plugins:/usr/share/elasticsearch/plugins： 将插件目录挂载到宿主机(需重启)
 > -d elasticsearch:7.10.1：后台运行容器，并返回容器ID
 >
-> 
+>
 >
 > curl http://127.0.0.1:9200 返回示例
 >
@@ -1071,8 +1070,6 @@ curl http://127.0.0.1:9200
 > }
 > ```
 
-
-
 ### 2.5.2 查看docker进程
 
 ```shell
@@ -1080,8 +1077,6 @@ docker top elasticsearch
 ```
 
 ![image-20201105010415199](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201105010415199.png)
-
-
 
 ### 2.5.3 浏览器访问是否成功
 
@@ -1205,8 +1200,6 @@ http://192.168.40.132:9100
 
 ![image-20201108160557957](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201108160557957.png)
 
-
-
 ### 2.5.6 ES集群docker-compose示例
 
 To get a three-node Elasticsearch cluster up and running in Docker, you can use Docker Compose:
@@ -1285,8 +1278,6 @@ networks:
   elastic:
     driver: bridge
 ```
-
-
 
 ## 2.6.a Docker安装Kibana
 
@@ -1393,8 +1384,6 @@ clear && docker logs -f kibana
 
 ```
 
-
-
 ### 2.6.1 查看docker进程
 
 ```shell
@@ -1410,13 +1399,9 @@ http://192.168.40.132:5601
 
 ![image-20210302001528750](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210302001528750.png)
 
-
-
 ## 2.6.b Docker安装Logstash
 
 > 注意：版本最好和`ElasticSearch`,`Kibana`的版本保持一致
-
-
 
 ### 2.6.3  拉取镜像准备工作目录
 
@@ -1567,8 +1552,6 @@ docker run --name ${CONTAINER_NAME} --restart=always \
 clear && docker logs -f logstash
 ```
 
-
-
 ### 2.6.4 进入logstash容器安装json插件
 
 > 可能有点慢，等待即可
@@ -1583,8 +1566,6 @@ docker restart logstash && clear && docker logs -f logstash
 ```
 
 ![image-20210302052314933](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210302052314933.png)
-
-
 
 ### 2.6.5  修改Logstash的JVM参数
 
@@ -1701,8 +1682,6 @@ EOF
 docker restart logstash && clear && docker logs -f logstash
 ```
 
-
-
 - 浏览器访问: http://127.0.0.1:9600/
 
 ```bash
@@ -1710,8 +1689,6 @@ curl http://127.0.0.1:9600/
 ```
 
 ![image-20210302045936822](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210302045936822.png)
-
-
 
 ## 2.7 Docker安装MySQL
 
@@ -1784,8 +1761,6 @@ alter user 'root'@'%' identified with mysql_native_password by '123456';
 flush privileges;
 ```
 
-
-
 - 退出`MySQL`与`MySQL`容器
 
 ```shell
@@ -1842,19 +1817,13 @@ clear && docker logs -f redis
 
 ```
 
-
-
 > 参数说明：
 >
-> /etc/redis/redis.conf                 /etc/redis/redis.conf 关键配置，让redis以指定的配置文件启动，而不是默认无配置启动
+> /etc/redis/redis.conf /etc/redis/redis.conf 关键配置，让redis以指定的配置文件启动，而不是默认无配置启动
 >
-> --appendonly yes                       redis启动后开启数据持久化
+> --appendonly yes redis启动后开启数据持久化
 >
-> --requirepass ”123456”              你的密码，根据情况设置
-
-
-
-
+> --requirepass ”123456” 你的密码，根据情况设置
 
 ## 2.9 Docker安装Gitea
 
@@ -1877,7 +1846,8 @@ docker pull mysql
 - 创建并启动容器
 
 > docker-compose file (with description):
-> Use this docker-compose file to get up and running quickly. You should change mysql user- and root password. When installing, you can reference the database container as host db.
+> Use this docker-compose file to get up and running quickly. You should change mysql user- and root password. When
+> installing, you can reference the database container as host db.
 > This configuration will publicly expose ports 3000 and 22.
 > To start Gitea in combination with a MySQL database, apply these changes to the docker-compose.yml file created above.
 
@@ -1951,23 +1921,17 @@ services:
       - "3306:3306"
 ```
 
-
-
 - 运行`docker compose`
 
 ```shell
 cd /usr/local/gitea && docker-compose up -d server
 ```
 
-
-
 - 查看进程
 
 ```shell
 cd /usr/local/gitea && docker-compose ps -a
 ```
-
-
 
 - 开启`gitea`的`mysql`远程访问
 
@@ -1994,23 +1958,21 @@ exit;
 exit
 ```
 
-
-
 - 浏览器访问`gitea`首页进行初始化设置
 
 http://192.168.x.x:3000
 
 > **提别提醒**：
 
-  登录->数据库主机: 填服务器的(私网ip)172.19.170.239:3306(根据你的yml文件里面映射实际情况填就行了)
+登录->数据库主机: 填服务器的(私网ip)172.19.170.239:3306(根据你的yml文件里面映射实际情况填就行了)
 
-  创建管理员帐户是可选的。第一个注册用户将自动成为管理员。
+创建管理员帐户是可选的。第一个注册用户将自动成为管理员。
 
->   设置管理员账号:
+> 设置管理员账号:
 
-  **管理员用户名**(推荐手机号): 1432689025
-  **密码**:yourPassword
-  **邮箱(**可用于登录): 1432689025@qq.com
+**管理员用户名**(推荐手机号): 1432689025
+**密码**:yourPassword
+**邮箱(**可用于登录): 1432689025@qq.com
 
 
 
@@ -2153,9 +2115,7 @@ http://192.168.x.x:3000
 > }
 > ```
 >
-> 
-
-
+>
 
 ## 2.10 Docker安装Jenkins
 
@@ -2217,8 +2177,6 @@ docker run --name jenkins \
 docker exec -it jenkins bash
 ```
 
-
-
 ### 2.10.3 查看`Jenkins`首次初始化的登录密码
 
 > *两种方式获取*
@@ -2253,8 +2211,6 @@ docker logs -f jenkins
 > This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 
 `30d6c86ecfc248eba6907f09584597b1`就是你需要的密码
-
-
 
 ### 2.10.4 关闭高版本`Jenkins`的跨站请求伪造
 
@@ -2300,8 +2256,6 @@ vim /usr/local/bin/jenkins.sh
 exit
 ```
 
-
-
 - 重启jenkins容器
 
 ```shell
@@ -2319,8 +2273,6 @@ docker restart jenkins && docker logs -f jenkins
 ![image-20201105134308869](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201105134308869.png)
 
 至此，`Jenkins`的的大部分配置已完毕，你可以尽情的搭建你的企业级`DevOps`了......
-
-
 
 ### 2.10.6 配置换机Jenkins的Maven环境
 
@@ -2340,11 +2292,15 @@ JDK的比较简单，**Maven的比较坑记录一下**
 
 ![image-20221024002156868](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221024002156868.png)
 
-### 2.10.7 `Jenkins`基于[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)和[Authorize Project](https://plugins.jenkins.io/authorize-project)角色权限分配后`git webhooks`**远程构建触发**
+### 2.10.7 `Jenkins`基于[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)和[Authorize Project](https://plugins.jenkins.io/authorize-project)角色权限分配后`git webhooks`
+**远程构建触发**
 
 > 踩坑背景：
 >
-> ​       Jenkins使用[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)和[Authorize Project](https://plugins.jenkins.io/authorize-project)角色权限管理策略后，默认的Git远程触发构建会被权限插件拦截，导致我们提交代码到Git仓库后，Git发送POST请求给Jenkins服务器，Jenkins服务器响应403状态码，所以我们要解决这个问题，实现基于权限策略的Git提交代码后自动构建发布我们的项目到远程测试服务器。
+> ​ Jenkins使用[Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy)
+> 和[Authorize Project](https://plugins.jenkins.io/authorize-project)
+>
+角色权限管理策略后，默认的Git远程触发构建会被权限插件拦截，导致我们提交代码到Git仓库后，Git发送POST请求给Jenkins服务器，Jenkins服务器响应403状态码，所以我们要解决这个问题，实现基于权限策略的Git提交代码后自动构建发布我们的项目到远程测试服务器。
 
 #### 2.10.6.1 权限入口
 
@@ -2356,27 +2312,17 @@ JDK的比较简单，**Maven的比较坑记录一下**
 
 ![image-20201112153756205](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112153756205.png)
 
-
-
 #### 2.10.6.2 分配权限
 
 ![image-20201112153837288](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112153837288.png)
 
 ![image-20201112153908509](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112153908509.png)
 
-
-
-
-
 #### 2.10.6.3 生成api凭据token
 
 ![image-20201112154054416](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112154054416.png)
 
 ![image-20201112154329572](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112154329572.png)
-
-
-
-
 
 ![image-20201112154443226](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112154443226.png)
 
@@ -2392,13 +2338,12 @@ JDK的比较简单，**Maven的比较坑记录一下**
 
 点击保存。
 
-
-
 #### 2.10.6.4 配置Git Web钩子
 
-Use the following URL to trigger build remotely:       
+Use the following URL to trigger build remotely:
 
- `JENKINS_URL`/job/recommendation_web_manage/build?token=`TOKEN_NAME` 或者/buildWithParameters?token=`TOKEN_NAME`Optionally append `&cause=Cause+Text` to provide text that will be included in the recorded build cause.  
+`JENKINS_URL`/job/recommendation_web_manage/build?token=`TOKEN_NAME` 或者/buildWithParameters?token=`TOKEN_NAME`
+Optionally append `&cause=Cause+Text` to provide text that will be included in the recorded build cause.
 
 - 基于权限控制的远程webhooks的目标URL模板
 
@@ -2414,8 +2359,6 @@ URL示例:
 http://alphahub:116226d0b77a83cd3fac6bf32bc8bddf31@106.14.13.156:9090/job/recommendation_web_portal/build?token=116226d0b77a83cd3fac6bf32bc8bddf31
 ```
 
-
-
 - 打开出发构建项目的git链接
 
 ![image-20201112160226446](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112160226446.png)
@@ -2425,8 +2368,6 @@ http://alphahub:116226d0b77a83cd3fac6bf32bc8bddf31@106.14.13.156:9090/job/recomm
 ![image-20201112160256024](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112160256024.png)
 
 ![image-20201112160331754](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112160331754.png)
-
-
 
 ![image-20201112160354538](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112160354538.png)
 
@@ -2440,15 +2381,13 @@ http://alphahub:116226d0b77a83cd3fac6bf32bc8bddf31@106.14.13.156:9090/job/recomm
 
 #### 2.10.6.5 浏览器新打开一个Jenkins的窗口验证
 
-##### a.  打开两个窗口
+##### a. 打开两个窗口
 
 ![image-20201112162252275](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112162252275.png)
 
-##### b.  点击测试推送
+##### b. 点击测试推送
 
 ![image-20201112162615150](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112162615150.png)
-
-
 
 ![image-20201112162723187](https://super-power-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20201112162723187.png)
 
@@ -2468,23 +2407,17 @@ https://plugins.jenkins.io/publish-over-ssh/
 
 ![image-20221104235412138](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221104235412138.png)
 
-
-
 - `Git Parameter`
 
 https://plugins.jenkins.io/git-parameter/
 
 ![image-20221104235946206](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221104235946206.png)
 
-
-
 - `NodeJS`
 
 https://plugins.jenkins.io/nodejs/
 
 ![image-20221105002506912](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221105002506912.png)
-
-
 
 ## 2.11 Docker安装自定义WebApp
 
@@ -2563,19 +2496,13 @@ docker run --name $appName --restart=always \
 docker ps -a
 ```
 
-
-
 > 提示:
 >
 > 注意容器里面需要挂在在主机的目录, 比如日志目录, 应用总动态创建的目录, 公钥私钥的挂载目录等
 
-
-
 #### 2.11.2 安装前端npm web项目
 
 ......
-
-
 
 ## 2.13 Docker安装Jira Server
 
@@ -2622,12 +2549,9 @@ clear && docker logs -f jira
 
 - 浏览器访问（换成自己的ip）：
 
-
 http://192.168.40.132:7070
 
 ![image-20210103210416732](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210103210416732.png)
-
-
 
 #### 2.13.2 为`Jira`配置`MySQL`数据库
 
@@ -2737,8 +2661,6 @@ docker restart jira && clear && docker logs -f jira
 
 ```
 
-
-
 ```shell
 #查看日志
 clear && docker logs -f jira
@@ -2749,8 +2671,6 @@ clear && docker logs -f jira
 创建来了jira数据库：
 
 ![image-20210103230406496](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210103230406496.png)
-
-
 
 #### 2.13.3 破解Jira
 
@@ -2771,8 +2691,6 @@ clear && docker logs -f jira
 效果：
 
 ![image-20210103235256815](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210103235256815.png)
-
-
 
 ## 2.14 Docker安装Zipkin链路追踪
 
@@ -2897,8 +2815,6 @@ clear && docker logs -f zipkin
 
 ![image-20210104224448712](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210104224448712.png)
 
-
-
 ## 2.15 Docker安装maven私服
 
 #### 2.15.1 搭建jfrog artifactory OSS开源版
@@ -2948,7 +2864,7 @@ docker exec -it artifactory bash
 
 #### 2.15.3 Accessing Artifactory
 
-Access Artifactory from your browser at: `http://SERVER_HOSTNAME:8082/ui/`*.* 
+Access Artifactory from your browser at: `http://SERVER_HOSTNAME:8082/ui/`*.*
 
 For example, on your local machine: `http://192.168.40.132:9092/ui/`
 
@@ -2958,14 +2874,13 @@ Password: password
 
 ![image-20210119013057840](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210119013057840.png)
 
-**![image-20210119013144709](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210119013144709.png)**
+*
+*![image-20210119013144709](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210119013144709.png)
+**
 
 - 改密码: Password123456
 
-
 ![image-20210119013418701](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210119013418701.png)
-
-
 
 ## 2.16 docker安装PostgresSQL
 
@@ -3012,8 +2927,6 @@ COMMENT ON DATABASE "sonarqube" IS 'sonarqube数据库';
 >
 > 密码: 123456
 
-
-
 - 开启`PostgresSQL`远程访问
 
 修改文件`pg_hba.conf`,创建容器时已经挂载到宿主机目录: /usr/local/postgres/pgdata/pg_hba.conf, 在文件末尾添加一行
@@ -3027,13 +2940,9 @@ docker restart postgres
 clear && docker logs -f postgres
 ```
 
-
-
 - 使用navicat连接验证下
 
 ![image-20210626231545007](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210626231545007.png)
-
-
 
 ## 2.17 docker安装SonarQube
 
@@ -3045,8 +2954,6 @@ CREATE ROLE "root" SUPERUSER CREATEDB CREATEROLE LOGIN REPLICATION BYPASSRLS PAS
 CREATE DATABASE "sonarqube" WITH OWNER = "root" TEMPLATE = "template0" ENCODING = 'UTF8' TABLESPACE = "pg_default";
 COMMENT ON DATABASE "sonarqube" IS 'sonarqube数据库';
 ```
-
-
 
 ```shell
 #!/bin/bash
@@ -3110,13 +3017,9 @@ clear && docker logs -f sonarqube
 
 进入界面后: `Administration` --> `marketplace` --> `搜索chinese`，点击同一条款即可安装，安装完根据提示重启web界面语言便是中文。
 
-
-
 到此你的SonarQube安装好了：
 
 ![image-20210626233936489](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210626233936489.png)
-
-
 
 ## 2.18 docker安装torna
 
@@ -3680,15 +3583,12 @@ clear && docker logs -f torna
 
 ```
 
-
-
 ### Web访问Torna
 
 打开浏览器访问: http://192.168.40.132:7700
 
 超级管理员：admin@torna.cn
-  密码均为：123456
-
+密码均为：123456
 
 研发一部空间管理员：dev1admin@torna.cn
 研发一部-商城项目（公开）-项目管理员：dev1shop_admin@torna.cn
@@ -3703,11 +3603,7 @@ clear && docker logs -f torna
 
 ![image-20210711171342563](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210711171342563.png)
 
-
-
 ## 2.19 Docker安装Nacos
-
-
 
 提示：安装`nacos`前先配置好`mysql`，脚本如下：
 
@@ -3762,7 +3658,8 @@ clear && docker logs -f nacos
 
 ```
 
-> `-e MYSQL_SERVICE_HOST="mysql"`表示：`nacos`和`mysql`共同使用一个网络`mynet`，如果不在同一个网络环境，写成ip: `  -e MYSQL_SERVICE_HOST="192.168.31.23"`
+> `-e MYSQL_SERVICE_HOST="mysql"`表示：`nacos`和`mysql`共同使用一个网络`mynet`
+> ，如果不在同一个网络环境，写成ip: `  -e MYSQL_SERVICE_HOST="192.168.31.23"`
 
 ## 2.20 Docker安装sentinel
 
@@ -3821,8 +3718,6 @@ rm -rfv ${APP}.jar
 
 #访问sentinel控制面板: http://192.168.31.105:9412
 ```
-
-
 
 ## **2.21 Docker安装seata**
 
@@ -3927,8 +3822,6 @@ rm -rfv ${BASE_DIR}/seata-server-${CURRENT_VERSION}.tar.gz
 rm -rfv ${BASE_DIR}/seata-server-${CURRENT_VERSION}
 ```
 
-
-
 ## 2.22 Docker安转oracle数据库
 
 ```bash
@@ -4004,8 +3897,6 @@ sqlplus system/123456@lwj
 # alter session set container=lwjpdb;
 ```
 
-
-
 - 创建用户
 
 ```sql
@@ -4016,8 +3907,6 @@ GRANT "DBA", "PDB_DBA" TO "C##LWJ" WITH ADMIN OPTION;
 ALTER USER "C##LWJ" DEFAULT ROLE "DBA", "PDB_DBA"
 ```
 
-
-
 - 登录用户就可以在这个用户的名下建表
 
 ![image-20220722214009822](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20220722214009822.png)
@@ -4025,8 +3914,6 @@ ALTER USER "C##LWJ" DEFAULT ROLE "DBA", "PDB_DBA"
 ![image-20220722214028242](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20220722214028242.png)
 
 ![image-20220722214210148](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20220722214210148.png)
-
-
 
 ## 2.23 docker安装mariadb
 
@@ -4059,8 +3946,6 @@ docker run --name $CONTAINER \
 clear && docker logs -f mariadb
 ```
 
-
-
 - ## reset root and user passwords
 
   Adjust `myuser`, `databasename` and passwords as needed.
@@ -4074,31 +3959,25 @@ clear && docker logs -f mariadb
   use mysql;
   ```
 
-  
-
   ```sql
   CREATE USER IF NOT EXISTS root@localhost IDENTIFIED BY '123456';
-  SET PASSWORD FOR root@localhost = PASSWORD('123456');
-  GRANT ALL ON *.* TO root@localhost WITH GRANT OPTION;
-  CREATE USER IF NOT EXISTS root@'%' IDENTIFIED BY '123456';
-  SET PASSWORD FOR root@'%' = PASSWORD('123456');
-  GRANT ALL ON *.* TO root@'%' WITH GRANT OPTION;
-  
-  CREATE USER IF NOT EXISTS lwj@'%' IDENTIFIED BY '123456';
-  SET PASSWORD FOR lwj@'%' = PASSWORD('123456');
-  CREATE DATABASE IF NOT EXISTS db_demo;
-  GRANT ALL ON db_demo.* TO lwj@'%';
+SET PASSWORD FOR root@localhost = PASSWORD ('123456');
+GRANT ALL ON *.* TO root@localhost WITH GRANT OPTION;
+CREATE USER IF NOT EXISTS root@'%' IDENTIFIED BY '123456';
+SET PASSWORD FOR root@'%' = PASSWORD ('123456');
+GRANT ALL ON *.* TO root@'%' WITH GRANT OPTION;
+
+CREATE USER IF NOT EXISTS lwj@'%' IDENTIFIED BY '123456';
+SET PASSWORD FOR lwj@'%' = PASSWORD ('123456');
+CREATE DATABASE IF NOT EXISTS db_demo;
+GRANT ALL ON db_demo.* TO lwj@'%';
   ```
-
-
 
 ```bash
 docker restart mariadb
 ```
 
-
-
-##  2.24 Docker 运行 SQL Server
+## 2.24 Docker 运行 SQL Server
 
 [微软官方文档](https://docs.microsoft.com/zh-cn/sql/linux/quickstart-install-connect-docker?view=sql-server-ver16&pivots=cs1-bash)
 
@@ -4136,9 +4015,7 @@ docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "wea
 
 ```
 
-
-
-##  2.25 Docker 运行 DB2
+## 2.25 Docker 运行 DB2
 
 ```bash
 #!/bin/bash
@@ -4173,8 +4050,6 @@ docker logs -f db2
 
 docker exec -it db2 /bin/bash
 ```
-
-
 
 ## 2.16 docker安装MongoDB
 
@@ -4213,8 +4088,6 @@ mongo localhost:27017
 
 ![image-20221021030859760](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20221021030859760.png)
 
-
-
 ```mongodb
 use admin;
 db.auth("yapipro", "yapipro1024");
@@ -4239,8 +4112,6 @@ exit;
 #退出容器
 exit
 ```
-
-
 
 ## 2.17 docker安装Yapi
 
@@ -4306,13 +4177,9 @@ docker run --name yapi --restart=always \
   server/app.js
 ```
 
-
-
 ```bash
 docker logs -f yapi
 ```
-
-
 
 ```bash
 # 在服务器上验证yapi启动是否成功
@@ -4324,8 +4191,6 @@ curl http://127.0.0.1:3000/
 user: 1432689025@qq.com
 
 pwd: yapi.pro
-
-
 
 ## 2.18 docker安装xxl-job-admin
 
@@ -4385,8 +4250,6 @@ docker logs -f xxl-job-admin
 # http://宿主机ip:8081/job
 ```
 
-
-
 ## 2.19 安装携程Apollo注册中心
 
 ```sql
@@ -4395,8 +4258,6 @@ CREATE DATABASE IF NOT EXISTS `apollo_portal` CHARACTER SET 'utf8mb4' COLLATE 'u
 ```
 
 [配置中心数据库脚本](https://github.com/apolloconfig/apollo-quick-start/blob/master/sql/apolloconfigdb.sql)
-
-
 
 - 安装脚本（随宿主机启动）
 
@@ -4474,10 +4335,6 @@ docker logs -f apollo-portal
 
 ```
 
-
-
-
-
 Apollo Config Service
 
 ```bash
@@ -4519,10 +4376,6 @@ docker run -p 8070:8070 \
   --name apollo-portal apolloconfig/apollo-portal
 ```
 
-
-
-
-
 # 3 Docker配置和操作
 
 ## 3.1 docker防火墙的配置
@@ -4543,8 +4396,6 @@ systemctl status firewalld
 #重新加载systemctl配置以及重启docker服务
 systemctl daemon-reload && systemctl restart docker.service
 ```
-
-
 
 ## 3.2 docker远程连接配置
 
@@ -4619,19 +4470,15 @@ docker rm -f $(docker ps -a | awk '{ print $1}' | tail -n +2)
 docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 ```
 
-
-
 ## 3.5 创建自定义网络环境解决同一宿主机上不同docker容器网络互通问题
 
-
-
-> ​    建议使用自定义的网桥来控制哪些容器可以相互通信，还可以自动 DNS 解析容器名称到IP地址。Docker  提供了创建这些网络的默认网络驱动程序，你可以创建一个新的 Bridge 网络，Overlay 或 Macvlan  网络。你还可以创建一个网络插件或远程网络进行完整的自定义和控制。
+> ​ 建议使用自定义的网桥来控制哪些容器可以相互通信，还可以自动 DNS 解析容器名称到IP地址。Docker
+> 提供了创建这些网络的默认网络驱动程序，你可以创建一个新的 Bridge 网络，Overlay 或 Macvlan 网络。你还可以创建一个网络插件或远程网络进行完整的自定义和控制。
 >
-> ​    你可以根据需要创建任意数量的网络，并且可以在任何给定时间将容器连接到这些网络中的零个或多个网络。此外，您可以连接并断开网络中的运行容器，而无需重新启动容器。当容器连接到多个网络时，其外部连接通过第一个非内部网络以词法顺序提供。
+> ​ 你可以根据需要创建任意数量的网络，并且可以在任何给定时间将容器连接到这些网络中的零个或多个网络。此外，您可以连接并断开网络中的运行容器，而无需重新启动容器。当容器连接到多个网络时，其外部连接通过第一个非内部网络以词法顺序提供。
 >
-> ​    一个 Bridge 网络是 Docker 中最常用的网络类型。桥接网络类似于默认 Bridge 网络，但添加一些新功能并删除一些旧的能力。以下示例创建一些桥接网络，并对这些网络上的容器执行一些实验。
-
-
+> ​ 一个 Bridge 网络是 Docker 中最常用的网络类型。桥接网络类似于默认 Bridge
+> 网络，但添加一些新功能并删除一些旧的能力。以下示例创建一些桥接网络，并对这些网络上的容器执行一些实验。
 
 ```shell
 docker network rm mynet
@@ -4644,8 +4491,6 @@ docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.
   docker network ls
   ```
 
-  
-
 ![image-20210303011433042](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210303011433042.png)
 
 - 查看我们创建的网络环境
@@ -4655,8 +4500,6 @@ docker network inspect mynet
 ```
 
 ![image-20210303011337417](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210303011337417.png)
-
-
 
 - 创建两个容器是可以 `ping` 通的
 
@@ -4668,8 +4511,6 @@ docker rm -f web_app_2 && docker run -d -p 8002:7070 --name web_app_2 --net myne
 mynet下面有两个容器：`docker network inspect mynet`
 
 ![image-20210303014937554](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210303014937554.png)
-
-
 
 ```bash
 docker exec -it web_app_1 bash
@@ -4690,7 +4531,8 @@ docker exec -it web_app_2 ping web_app_1
 
 - 网络连通
 
-> 基于 **docker0** 的容器和基于 **mynet** 的容器之间是不互通的，所以需要进行网络连通，还是以 **springboot-jenkins-demo.jar** 为例：
+> 基于 **docker0** 的容器和基于 **mynet** 的容器之间是不互通的，所以需要进行网络连通，还是以 **springboot-jenkins-demo.jar
+** 为例：
 
 ```shell
 docker rm -f web_app_3 && docker run -d -p 8003:7070 --name web_app_3 springboot-jenkins-demo:1.0.0-SNAPSHOT
@@ -4713,7 +4555,8 @@ docker network inspect mynet
 
 **Tips**： 一个容器，2 个 ip，类似于云服务器，有公网ip 和内网 ip
 
-3. 测试网络是否可以互通，我们使用**web_app_3**去**ping web_app_1**可以**ping**通，但是 **web_app_2**还是 **ping** 不通的：话不多数，上代码：
+3. 测试网络是否可以互通，我们使用**web_app_3**去**ping web_app_1**可以**ping**通，但是 **web_app_2**还是 **ping**
+   不通的：话不多数，上代码：
 
 ```shell
 # web_app_3 连接 web_app_1

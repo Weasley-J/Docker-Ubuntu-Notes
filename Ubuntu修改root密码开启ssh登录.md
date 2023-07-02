@@ -27,7 +27,7 @@ sudo service ssh start
 # 修改ssh-server配置文件:/etc/ssh/sshd_config, 开启允许root用户登录
 # 在这里可以定义SSH的服务端口，默认端口是22，你可以自己定义成其他端口号，如222
 vim /etc/ssh/sshd_config
-# 
+#
 # 将 "PermitRootLogin without-password" 改为 "PermitRootLogin yes"
 #
 # 退出vim编辑器
@@ -35,6 +35,7 @@ vim /etc/ssh/sshd_config
 
 # 重启ubuntu系统
 reboot now
+
 ```
 
 

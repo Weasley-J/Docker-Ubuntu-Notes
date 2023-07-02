@@ -51,14 +51,10 @@ echo 'net.bridge.bridge-nf-call-ip6tables = 1'>>/etc/sysctl.conf
 sysctl -p
 ```
 
-
-
 ```
 apt-get update && apt-get install -y apt-transport-https
 curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
 ```
-
-
 
 ```bash
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
@@ -71,8 +67,6 @@ apt-get install -y kubelet kubeadm kubectl
 kubeadm version
 systemctl enable kubelet
 ```
-
-
 
 ## 1.3  部署k8s-master
 
@@ -716,15 +710,11 @@ kubectl get nodes
 
 ```
 
-
-
 ```shell
 #在所有节点上运行一下命令行加入slave-node到主节点
 kubeadm join 192.168.40.128:6443 --token cymz5b.z2gre4fnk4sibbrs \
     --discovery-token-ca-cert-hash sha256:09cbebe845019fd55a5680e7e1993379783bfa77ec6bbccef7ae14662406cdec
 ```
-
-
 
 - 查看节点的运行状态
 
@@ -746,10 +736,6 @@ helm init --service-account tiller --upgrade -i registry.aliyuncs.com/google_con
 ```
 
 ![image-20210103172633687](https://alphahub-test-bucket.oss-cn-shanghai.aliyuncs.com/image/image-20210103172633687.png)
-
-
-
-
 
 # 2 kubernetes集群重新初始化
 

@@ -25,19 +25,20 @@
 
 ![image-20200325070631353](images/image-20200325070631353.png)
 
- Memcached作为一个独立的分布式的缓存服务器，为多个web服务器提供了一个共享的高性能缓存服务，在Memcached服务器上，又发展了根据hash算法来进行多台Memcached缓存服务的扩展，然后又出现了一致性hash来解决增加或减少缓存服务器导致重新hash带来的大量缓存失效的弊端
+Memcached作为一个独立的分布式的缓存服务器，为多个web服务器提供了一个共享的高性能缓存服务，在Memcached服务器上，又发展了根据hash算法来进行多台Memcached缓存服务的扩展，然后又出现了一致性hash来解决增加或减少缓存服务器导致重新hash带来的大量缓存失效的弊端
 
 ##### Mysql主从读写分离
 
- 由于数据库的写入压力增加，Memcached只能缓解数据库的读取压力。读写集中在一个数据库上让数据库不堪重负，大部分网站开始使用主从复制技术来达到读写分离，以提高读写性能和读库的可扩展性。Mysql的master-slave模式成为这个时候的网站标配了。
+由于数据库的写入压力增加，Memcached只能缓解数据库的读取压力。读写集中在一个数据库上让数据库不堪重负，大部分网站开始使用主从复制技术来达到读写分离，以提高读写性能和读库的可扩展性。Mysql的master-slave模式成为这个时候的网站标配了。
 
 ![image-20200325070700698](images/image-20200325070700698.png)
 
-##### 分表分库+水平拆分+mysql集群 
+##### 分表分库+水平拆分+mysql集群
 
- 在Memcached的高速缓存，MySQL的主从复制，读写分离的基础之上，这时MySQL主库的写压力开始出现瓶颈，而数据量的持续猛增，由于MyISAM使用表锁，在高并发下会出现严重的锁问题，大量的高并发MySQL应用开始使用InnoDB引擎代替MyISAM。
+在Memcached的高速缓存，MySQL的主从复制，读写分离的基础之上，这时MySQL主库的写压力开始出现瓶颈，而数据量的持续猛增，由于MyISAM使用表锁，在高并发下会出现严重的锁问题，大量的高并发MySQL应用开始使用InnoDB引擎代替MyISAM。
 
- 同时，开始流行使用分表分库来缓解写压力和数据增长的扩展问题。这个时候，分表分库成了一个热门技术，是面试的热门问题也是业界讨论的热门技术问题。也就在这个时候，MySQL推出了还不太稳定的表分区，这也给技术实力一般的公司带来了希望。虽然MySQL推出了MySQL Cluster集群，但性能也不能很好满足互联网的要求，只是在高可靠性上提供了非常大的保证。
+同时，开始流行使用分表分库来缓解写压力和数据增长的扩展问题。这个时候，分表分库成了一个热门技术，是面试的热门问题也是业界讨论的热门技术问题。也就在这个时候，MySQL推出了还不太稳定的表分区，这也给技术实力一般的公司带来了希望。虽然MySQL推出了MySQL
+Cluster集群，但性能也不能很好满足互联网的要求，只是在高可靠性上提供了非常大的保证。
 
 <img src="images/image-20200325070729125.png"   width="600" height = "400"  />
 
@@ -49,20 +50,19 @@ MySQL数据库也经常存储一些大文本字段，导致数据库表非常的
 
 <img src="images/image-20200325070802440.png"   width="600" height = "400"  />
 
-
-
 ##### 为什么用NoSQL
-
 
 为什么使用NoSQL ?
 
-今天我们可以通过第三方平台（如：Google,Facebook等）可以很容易的访问和抓取数据。用户的个人信息，社交网络，地理位置，用户生成的数据和用户操作日志已经成倍的增加。我们如果要对这些用户数据进行挖掘，那SQL数据库已经不适合这些应用了, NoSQL数据库的发展也却能很好的处理这些大的数据。
+今天我们可以通过第三方平台（如：Google,Facebook等）可以很容易的访问和抓取数据。用户的个人信息，社交网络，地理位置，用户生成的数据和用户操作日志已经成倍的增加。我们如果要对这些用户数据进行挖掘，那SQL数据库已经不适合这些应用了,
+NoSQL数据库的发展也却能很好的处理这些大的数据。
 
 ![image-20200325070822796](images/image-20200325070822796.png)
 
 #### B、是什么？
 
-NoSQL(NoSQL = Not Only SQL )，意即“不仅仅是SQL”，泛指非关系型的数据库。随着互联网web2.0网站的兴起，传统的关系数据库在应付web2.0网站，特别是超大规模和高并发的SNS类型的web2.0纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。NoSQL数据库的产生就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题，包括超大规模数据的存储。
+NoSQL(NoSQL = Not Only SQL )
+，意即“不仅仅是SQL”，泛指非关系型的数据库。随着互联网web2.0网站的兴起，传统的关系数据库在应付web2.0网站，特别是超大规模和高并发的SNS类型的web2.0纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。NoSQL数据库的产生就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题，包括超大规模数据的存储。
 
 （例如谷歌或Facebook每天为他们的用户收集万亿比特的数据）。这些类型的数据存储不需要固定的模式，无需多余操作就可以横向扩展。
 
@@ -72,17 +72,17 @@ NoSQL(NoSQL = Not Only SQL )，意即“不仅仅是SQL”，泛指非关系型�
 
 NoSQL数据库种类繁多，但是一个共同的特点都是去掉关系数据库的关系型特性。数据之间无关系，这样就非常容易扩展。也无形之间，在架构的层面上带来了可扩展的能力。
 
-##### 大数据量高性能 
+##### 大数据量高性能
 
 NoSQL数据库都具有非常高的读写性能，尤其在大数据量下，同样表现优秀。这得益于它的无关系性，数据库的结构简单。
-一般MySQL使用Query Cache，每次表的更新Cache就失效，是一种大粒度的Cache，在针对web2.0的交互频繁的应用，Cache性能不高。而NoSQL的Cache是记录级的，是一种细粒度的Cache，所以NoSQL在这个层面上来说就要性能高很多了
+一般MySQL使用Query
+Cache，每次表的更新Cache就失效，是一种大粒度的Cache，在针对web2.0的交互频繁的应用，Cache性能不高。而NoSQL的Cache是记录级的，是一种细粒度的Cache，所以NoSQL在这个层面上来说就要性能高很多了
 
 ##### 多样灵活的数据模型
 
 NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义的数据格式。而在关系数据库里，增删字段是一件非常麻烦的事情。如果是非常大数据量的表，增加字段简直就是一个噩梦。
 
 ##### 传统RDBMS VS NOSQL
-
 
 1. RDBMS
 
@@ -98,7 +98,7 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
     - 代表着不仅仅是SQL
     - 没有声明性查询语言
     - 没有预定义的模式
-    -键 - 值对存储，列存储，文档存储，图形数据库
+      -键 - 值对存储，列存储，文档存储，图形数据库
     - 最终一致性，而非ACID属性
     - 非结构化和不可预知的数据
     - CAP定理
@@ -107,14 +107,14 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 ### 2）3V+3高
 
 1. 大数据时代的3V
-   * 海量Volume
-   * 多样Variety
-   * 实时Velocity
+    * 海量Volume
+    * 多样Variety
+    * 实时Velocity
 
 2. 互联网需求的3高
-   * 高并发
-   * 高可扩
-   * 高性能
+    * 高并发
+    * 高可扩
+    * 高性能
 
 ### 3）当下的NoSQL经典应用
 
@@ -138,13 +138,9 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 
 <img src="images/image-20200403114538246.png"   width="600" height = "400"  />
 
-
-
 #### 多数据源多数据类型的存储问题
 
 <img src="images/image-20200403114611310.png"   width="600" height = "400"  />
-
-
 
 #### 1. 商品基本信息
 
@@ -154,13 +150,12 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 
 为什么去IOE？
 
- ![image-20200403114932111](images/image-20200403114932111.png)
+![image-20200403114932111](images/image-20200403114932111.png)
 
- 2008年，王坚加盟阿里巴巴成为集团首席架构师，即现在的首席技术官。这位前微软亚洲研究院常务副院长被马云定位为：将帮助阿里巴巴集团建立世界级的技术团队，并负责集团技术架构以及基础技术平台搭建。
+2008年，王坚加盟阿里巴巴成为集团首席架构师，即现在的首席技术官。这位前微软亚洲研究院常务副院长被马云定位为：将帮助阿里巴巴集团建立世界级的技术团队，并负责集团技术架构以及基础技术平台搭建。
 在加入阿里后，带着技术基因和学者风范的王坚就在阿里巴巴集团提出了被称为“去IOE”（在IT建设过程中，去除IBM小型机、Oracle数据库及EMC存储设备）的想法，并开始把云计算的本质，植入阿里IT基因。
-王坚这样概括“去IOE”运动和阿里云之间的关系：“去IOE”彻底改变了阿里集团IT架构的基础，是阿里拥抱云计算，产出计算服务的基础。“去IOE”的本质是分布化，让随处可以买到的Commodity PC架构成为可能，使云计算能够落地的首要条件。
-
-
+王坚这样概括“去IOE”运动和阿里云之间的关系：“去IOE”彻底改变了阿里集团IT架构的基础，是阿里拥抱云计算，产出计算服务的基础。“去IOE”的本质是分布化，让随处可以买到的Commodity
+PC架构成为可能，使云计算能够落地的首要条件。
 
 #### 2. 商品描述、详情、评价信息(多文字类)
 
@@ -171,9 +166,9 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 
 1. 商品图片展现类
 2. 分布式的文件系统中
-   * 淘宝自己的TFS
-   * Google的GFS
-   * Hadoop的HDFS
+    * 淘宝自己的TFS
+    * Google的GFS
+    * Hadoop的HDFS
 
 #### 4. 商品的关键字
 
@@ -194,9 +189,9 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 
 1. 难点
 
-   - 数据类型多样性
-   - 数据源多样性和变化重构
-   - 数据源改造而数据服务平台不需要大面积重构
+    - 数据类型多样性
+    - 数据源多样性和变化重构
+    - 数据源改造而数据服务平台不需要大面积重构
 
 2. 解决办法
 
@@ -204,35 +199,29 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 
    <img src="images/image-20200403115608463.png"   width="600" height = "400"  />
 
-   
-
-   什么样
+什么样
 
    <img src="images/image-20200403115630838.png"   width="600" height = "400"  />
 
-   
 
-   映射
+
+映射
 
    <img src="images/image-20200403115743262.png"   width="600" height = "400"  />
 
-   
 
-   API
+
+API
 
    <img src="images/image-20200403115755960.png"   width="600" height = "400"  />
-   
-   
-   
-   热点缓存
-   
+
+
+
+热点缓存
+
    <img src="images/image-20200403115857922.png"   width="600" height = "400"  />
-   
-   
 
 ### 4）NoSQL数据模型简介
-
-
 
 #### 聚合模型
 
@@ -246,10 +235,6 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 2. 图形
 
    <img src="images/image-20200403120229061.png"   width="600" height = "400"  />
-   
-   
-
-
 
 ### 5）NoSQL数据库的四大分类
 
@@ -261,55 +246,48 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 
 2. 文档型数据库(bson格式比较多)：典型介绍
 
-   * CouchDB
+    * CouchDB
 
-   * MongoDB
-     MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。
+    * MongoDB
+      MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。
 
-     MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。
+      MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。
 
-   
 
 4. 列存储数据库
 
-   * Cassandra, HBase
-   * 分布式文件系统
+    * Cassandra, HBase
+    * 分布式文件系统
 
 5. 图关系数据库
 
-   * 它不是放图形的，放的是关系比如:朋友圈社交网络、广告推荐系统
-   * 社交网络，推荐系统等。专注于构建关系图谱
-   * Neo4J, InfoGrid
+    * 它不是放图形的，放的是关系比如:朋友圈社交网络、广告推荐系统
+    * 社交网络，推荐系统等。专注于构建关系图谱
+    * Neo4J, InfoGrid
 
 6. 四者对比
-   
-   
+
    <img src="images/image-20200403120713270.png"   width="600" height = "400"  />
-   
-   
-
-
-
-
 
 ### 6）在分布式数据库中CAP原理CAP+BASE
 
 #### 1. 传统的ACID分别是什么
 
-   * A (Atomicity) 原子性
-   * C (Consistency) 一致性
-   * I (Isolation) 独立性
-   * D (Durability) 持久性
+* A (Atomicity) 原子性
+* C (Consistency) 一致性
+* I (Isolation) 独立性
+* D (Durability) 持久性
 
 #### 2. CAP
 
-   * C:Consistency（强一致性）
-   * A:Availability（可用性）
-   * P:Partition tolerance（分区容错性）
+* C:Consistency（强一致性）
+* A:Availability（可用性）
+* P:Partition tolerance（分区容错性）
 
 #### 3. CAP的3进2
-   CAP理论就是说在分布式存储系统中，最多只能实现上面的两点。
-   而由于当前的网络硬件肯定会出现延迟丢包等问题，所以分区容忍性是我们必须需要实现的。所以我们只能在一致性和可用性之间进行权衡，没有NoSQL系统能同时保证这三点。
+
+CAP理论就是说在分布式存储系统中，最多只能实现上面的两点。
+而由于当前的网络硬件肯定会出现延迟丢包等问题，所以分区容忍性是我们必须需要实现的。所以我们只能在一致性和可用性之间进行权衡，没有NoSQL系统能同时保证这三点。
 
 - CA 传统Oracle数据库
 - AP 大多数网站架构的选择
@@ -317,23 +295,19 @@ NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义
 
 注意：分布式架构的时候必须做出取舍。
 
+一致性和可用性之间取一个平衡。多余大多数web应用，其实并不需要强一致性。因此牺牲C换取P，这是目前分布式数据库产品的方向
 
+**一致性与可用性的决择**
 
+对于web2.0网站来说，关系数据库的很多主要特性却往往无用武之地
 
-   一致性和可用性之间取一个平衡。多余大多数web应用，其实并不需要强一致性。因此牺牲C换取P，这是目前分布式数据库产品的方向
+**数据库事务一致性需求**很多web实时系统并不要求严格的数据库事务，对读一致性的要求很低， 有些场合对写一致性要求并不高。允许实现最终一致性。
 
-   **一致性与可用性的决择**
+**数据库的写实时性和读实时性需求**对关系数据库来说，插入一条数据之后立刻查询，是肯定可以读出来这条数据的，但是对于很多web应用来说，并不要求这么高的实时性，比方说发一条消息之
+后，过几秒乃至十几秒之后，我的订阅者才看到这条动态是完全可以接受的。
 
-   对于web2.0网站来说，关系数据库的很多主要特性却往往无用武之地
-
-   **数据库事务一致性需求** 
-   　　很多web实时系统并不要求严格的数据库事务，对读一致性的要求很低， 有些场合对写一致性要求并不高。允许实现最终一致性。
-
-   **数据库的写实时性和读实时性需求**
-   　　对关系数据库来说，插入一条数据之后立刻查询，是肯定可以读出来这条数据的，但是对于很多web应用来说，并不要求这么高的实时性，比方说发一条消息之 后，过几秒乃至十几秒之后，我的订阅者才看到这条动态是完全可以接受的。
-
-   **对复杂的SQL查询，特别是多表关联查询的需求** 
-   　　任何大数据量的web系统，都非常忌讳多个大表的关联查询，以及复杂的数据分析类型的报表查询，特别是SNS类型的网站，从需求以及产品设计角 度，就避免了这种情况的产生。往往更多的只是单表的主键查询，以及单表的简单条件分页查询，SQL的功能被极大的弱化了。
+**对复杂的SQL查询，特别是多表关联查询的需求**任何大数据量的web系统，都非常忌讳多个大表的关联查询，以及复杂的数据分析类型的报表查询，特别是SNS类型的网站，从需求以及产品设计角
+度，就避免了这种情况的产生。往往更多的只是单表的主键查询，以及单表的简单条件分页查询，SQL的功能被极大的弱化了。
 
 #### 4. 经典CAP图
 
@@ -347,14 +321,13 @@ CAP理论的核心是：一个分布式系统不可能同时很好的满足一�
 - AP - 满足可用性，分区容忍性的系统，通常可能对一致性要求低一些。
   <img src="images/image-20200403122145387.png"   width="600" height = "400"  />
 
-
-
 #### 5. BASE
 
 BASE就是为了解决关系数据库强一致性引起的问题而引起的可用性降低而提出的解决方案。
 
 BASE其实是下面三个术语的缩写：
- * 基本可用（Basically Available）
+
+* 基本可用（Basically Available）
 * 软状态（Soft state）
 * 最终一致（Eventually consistent）
 
@@ -362,18 +335,18 @@ BASE其实是下面三个术语的缩写：
 
 #### 6. 分布式+集群简介
 
-分布式系统（distributed system）：由多台计算机和通信的软件组件通过计算机网络连接（本地网络或广域网）组成。分布式系统是建立在网络之上的软件系统。正是因为软件的特性，所以分布式系统具有高度的内聚性和透明性。因此，网络和分布式系统之间的区别更多的在于高层软件（特别是操作系统），而不是硬件。分布式系统可以应用在在不同的平台上如：Pc、工作站、局域网和广域网上等。 
+分布式系统（distributed
+system）：由多台计算机和通信的软件组件通过计算机网络连接（本地网络或广域网）组成。分布式系统是建立在网络之上的软件系统。正是因为软件的特性，所以分布式系统具有高度的内聚性和透明性。因此，网络和分布式系统之间的区别更多的在于高层软件（特别是操作系统），而不是硬件。分布式系统可以应用在在不同的平台上如：Pc、工作站、局域网和广域网上等。
 
 简单来讲：
 
 - 分布式：不同的多台服务器上面部署不同的服务模块（工程），他们之间通过Rpc/Rmi之间通信和调用，对外提供服务和组内协作。
 - 集群：不同的多台服务器上面部署相同的服务模块，通过分布式调度软件进行统一的调度，对外提供服务和访问。
 
-
-
 ## 2：Redis入门介绍
 
-Redis（REmote DIctionary Server(远程字典服务器)）是完全开源免费的，用C语言编写的，遵守BSD协议，是一个高性能的(key/value)分布式内存数据库，基于内存运行并支持持久化的NoSQL数据库，是当前最热门的NoSql数据库之一,也被人们称为数据结构服务器。
+Redis（REmote DIctionary Server(远程字典服务器)）是完全开源免费的，用C语言编写的，遵守BSD协议，是一个高性能的(key/value)
+分布式内存数据库，基于内存运行并支持持久化的NoSQL数据库，是当前最热门的NoSql数据库之一,也被人们称为数据结构服务器。
 
 Redis 与其他 key - value 缓存产品有以下三个特点
 
@@ -424,13 +397,9 @@ CentOS Linux release 7.6.1810 (Core)
 
 * Redis版本：redis-5.0.8
 
-
-
 ##### 下载[redis](Http://redis.io/)
 
 <img src="images/image-20200403123508077.png"   width="600" height = "400"  />
-
-
 
 ```shell
 [root@Linux5 software]# wget http://download.redis.io/releases/redis-5.0.8.tar.gz
@@ -447,8 +416,6 @@ Saving to: ‘redis-5.0.8.tar.gz’
 
 [root@Linux5 software]# 
 ```
-
-
 
 ##### 编译和安装
 
@@ -518,8 +485,6 @@ make: *** [all] Error 2
 [root@Linux5 redis-5.0.8]# yum -y install gcc
 ```
 
-
-
 再次make：
 
 ```shell
@@ -559,8 +524,6 @@ Hint: It's a good idea to run 'make test' ;)
 make[1]: Leaving directory `/opt/software/redis-5.0.8/src' 
 ```
 
-
-
 make install
 
 ```shell
@@ -597,8 +560,6 @@ lrwxrwxrwx. 1 root root      12 Apr  3 02:15 redis-sentinel -> redis-server
 -rwxr--r--. 1 root root     394 Jul 20  2019 xsync
 [root@Linux5 redis-5.0.8]# 
 ```
-
-
 
 关于这些文件的说明：
 
@@ -691,8 +652,6 @@ lrwxrwxrwx. 1 root root      12 Apr  3 02:15 redis-sentinel -> redis-server
 
 * Redis-server：Redis服务器启动命令
 
-
-
 拷贝“redis.conf”到“/opt/module/redis”文件下：
 
 ```shell
@@ -703,8 +662,6 @@ BUGS             COPYING       INSTALL  MANIFESTO  redis.conf  runtest-cluster  
 [root@Linux5 redis-5.0.8]# cp redis.conf /opt/module/redis/
 [root@Linux5 redis-5.0.8]# 
 ```
-
-
 
 ##### 启动redis
 
@@ -739,9 +696,8 @@ BUGS             COPYING       INSTALL  MANIFESTO  redis.conf  runtest-cluster  
 11461:M 03 Apr 2020 02:21:39.377 * Ready to accept connections
 ```
 
-这是在界面上打印了redis的启动信息，可以设置让redis进程在后台运行，**修改redis.conf文件将里面的daemonize no 改成 yes，让服务在后台启动**。
-
-
+这是在界面上打印了redis的启动信息，可以设置让redis进程在后台运行，**修改redis.conf文件将里面的daemonize no 改成
+yes，让服务在后台启动**。
 
 查看redis进程
 
@@ -836,8 +792,6 @@ redis默认是不设置密码的：
 127.0.0.1:6379>
 ```
 
-
-
 ##### 远程连接redis
 
 这里我们采用的是Reids Desktop Manager来远程管理Redis。
@@ -851,7 +805,6 @@ vi /opt/module/redis/redis.conf
 修改为如下配置：
 
 ![image-20200403150245646](images/image-20200403150245646.png)
-
 
 关闭防火墙：
 
@@ -868,8 +821,6 @@ not running
 
 ```
 
-
-
 连接方法：
 
   <img src="images/image-20200403150636815.png"   width="600" height = "400"  />  
@@ -880,8 +831,6 @@ not running
 
 ![image-20200403150912535](images/image-20200403150912535.png)
 
-
-
 ##### 关闭redis
 
 * 单实例关闭：redis-cli shutdown
@@ -891,8 +840,6 @@ not running
 也可以在redis-cli连接中关闭redis关闭Redis
 
 ![image-20200402070439242](images/image-20200402070439242.png)
-
-
 
 #### Docker中安装redis
 
@@ -920,15 +867,11 @@ Created symlink from /etc/systemd/system/multi-user.target.wants/docker.service 
 [root@Linux5 ~]# 
 ```
 
-
-
 ##### pull redis
 
- https://hub.docker.com/_/redis/?tab=tags 
+https://hub.docker.com/_/redis/?tab=tags
 
 ![image-20200403155816198](images/image-20200403155816198.png)
-
-
 
 ```shell
 [root@Linux5 ~]# docker pull redis
@@ -949,8 +892,6 @@ REPOSITORY          TAG                 IMAGE ID            CREATED             
 docker.io/redis     latest              4cdbec704e47        2 days ago          98.2 MB
 ```
 
-
-
 ##### 启动redis
 
 ```shell
@@ -962,13 +903,12 @@ f3e65e372701        4cdbec704e47        "docker-entrypoint..."   21 seconds ago 
 [root@Linux5 ~]# 
 ```
 
-**“docker run -d -p 6379:6379 --name myredis 4cdbec704e47”**的解释。docker run运行镜像，-d表示在后台运行，-p 6379:6379 表示将操作系统的6379端口和docker中的6379端口做映射，-name表示容器名 ，“4cdbec704e47”也即镜像的id，也可以写“docker.io/redis”。
+**“docker run -d -p 6379:6379 --name myredis 4cdbec704e47”**的解释。docker run运行镜像，-d表示在后台运行，-p 6379:6379
+表示将操作系统的6379端口和docker中的6379端口做映射，-name表示容器名 ，“4cdbec704e47”也即镜像的id，也可以写“docker.io/redis”。
 
 ##### 远程连接redis
 
 使用Reids Desktop Manager来远程管理Redis。
-
-
 
 ```shell
 #获取redis的容器ID
@@ -984,8 +924,6 @@ docker-entrypoint.sh  gosu  redis-benchmark  redis-check-aof  redis-check-rdb  r
 root@f3e65e372701:/data# 
 ```
 
-
-
 关闭redis
 
 ```shell
@@ -1000,22 +938,21 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 [root@Linux5 ~]# 
 ```
 
-
-
 ### 3）杂项
 
 1. 单进程
 
-   * 单进程模型来处理客户端的请求。对读写等事件的响应 是通过对epoll函数的包装来做到的。Redis的实际处理速度完全依靠主进程的执行效率
+    * 单进程模型来处理客户端的请求。对读写等事件的响应 是通过对epoll函数的包装来做到的。Redis的实际处理速度完全依靠主进程的执行效率
 
-   * Epoll是Linux内核为处理大批量文件描述符而作了改进的epoll，是Linux下多路复用IO接口select/poll的增强版本， 它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统CPU利用率。
+    * Epoll是Linux内核为处理大批量文件描述符而作了改进的epoll，是Linux下多路复用IO接口select/poll的增强版本，
+      它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统CPU利用率。
 
 2. 默认16个数据库，类似数组下表从零开始，初始默认使用零号库
 
-   设置数据库的数量，默认数据库为0，可以使用SELECT \<dbid\>命令在连接上指定数据库id， 
-   
+   设置数据库的数量，默认数据库为0，可以使用SELECT \<dbid\>命令在连接上指定数据库id，
+
    **可以修改配置文件中可以配置默认库的数量：**
-   
+
 ```shell
    # Set the number of databases. The default database is DB 0, you can select
    设置数据库的数量。默认数据库起始于0，在每个连接上，使用select <dbid> 可以切换到另外的数据库上，<dbid>的范围为0-（databases-1）
@@ -1024,10 +961,8 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
    databases 16
 ```
 
-   关于默认16个数据库，实际上我们在前面通过“Reids Desktop Manager”连接redis的时候，已经看到了这点：
-   ![image-20200403165642399](images/image-20200403165642399.png)
-
-   
+关于默认16个数据库，实际上我们在前面通过“Reids Desktop Manager”连接redis的时候，已经看到了这点：
+![image-20200403165642399](images/image-20200403165642399.png)
 
 3. Select命令切换数据库
 
@@ -1041,33 +976,15 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 8. Redis索引都是从零开始
 
-9. 默认端口是6379，也即九宫格输入的“Alessia  Merz”
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+9. 默认端口是6379，也即九宫格输入的“Alessia Merz”
 
 通过DBSIZE能够查看key的数量，而keys * 能够查看都有哪些key
 
 ![image-20200402071457258](images/image-20200402071457258.png)
 
-
-
 ？匹配：
 
 ![image-20200402071719071](images/image-20200402071719071.png)
-
-
 
 如果在某个库下，执行FLUSHDB，则会清空当前库。如下面是在0号库下执行该命令后的结果：
 
@@ -1076,10 +993,6 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 如果想要删除整个库，可以执行FLUSHALL。
 
 ![image-20200402072004434](images/image-20200402072004434.png)
-
-
-
-
 
 ## 3：Redis数据类型
 
@@ -1095,12 +1008,11 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 #### Hash（哈希，类似java里的Map）
 
-- 
-  Redis hash 是一个键值对集合。
+-
+Redis hash 是一个键值对集合。
 - Redis hash是一个string类型的field和value的映射表，hash特别适合用于存储对象。
-- 
-  类似Java里面的Map<String,Object>
-
+-
+类似Java里面的Map<String,Object>
 
 #### List（列表）
 
@@ -1117,45 +1029,35 @@ Redis的Set是string类型的无序集合。它是通过HashTable实现实现的
 - redis通过分数来为集合中的成员进行从小到大的排序。
 - zset的成员是唯一的,但分数(score)却可以重复。
 
-
-
 ### 2）Redis 键(key)
 
 ![image-20200403170822243](images/image-20200403170822243.png)
 
- * keys *
+* keys *
 
- * exists key的名字，判断某个key是否存在
+* exists key的名字，判断某个key是否存在
 
- * move key db   --->当前库就没有了，被移除了move命令，
-   将一个key移动到另外一个库中：
+* move key db --->当前库就没有了，被移除了move命令，
+  将一个key移动到另外一个库中：
 
-   ![image-20200402073646448](images/image-20200402073646448.png)
+  ![image-20200402073646448](images/image-20200402073646448.png)
 
-   上面的操作是将k3，移动到2号库中。
+  上面的操作是将k3，移动到2号库中。
 
- * expire key 秒钟：为给定的key设置过期时间
+* expire key 秒钟：为给定的key设置过期时间
 
- * ttl key 查看还有多少秒过期，-1表示永不过期，-2表示已过期
+* ttl key 查看还有多少秒过期，-1表示永不过期，-2表示已过期
 
-   ![image-20200402073910319](images/image-20200402073910319.png)
+  ![image-20200402073910319](images/image-20200402073910319.png)
 
-   
+而且一旦过期后，通过get操作就查询不到值了，而且keys查看时，也不会显示key
 
-   而且一旦过期后，通过get操作就查询不到值了，而且keys查看时，也不会显示key
+![image-20200402074021721](images/image-20200402074021721.png)
 
-   ![image-20200402074021721](images/image-20200402074021721.png)
+* type key 查看你的key是什么类型
+  通过type 能够查看key的类型
 
-   
-
- * type key 查看你的key是什么类型
-   通过type 能够查看key的类型
-
-   ![image-20200402074322554](images/image-20200402074322554.png)
-
-   
-
-
+  ![image-20200402074322554](images/image-20200402074322554.png)
 
 ### 3）Redis字符串(String)
 
@@ -1205,16 +1107,12 @@ setnx:只有在 key 不存在时设置 key 的值。
 
   ![image-20200403180811437](images/image-20200403180811437.png)
 
- 
-
- 
-
 #### getset(先get再set)
 
 getset:将给定 key 的值设为 value ，并返回 key 的旧值(old value)。
 简单一句话，先get然后立即set
 
- ![image-20200403180843011](images/image-20200403180843011.png)
+![image-20200403180843011](images/image-20200403180843011.png)
 
 ### 4）Redis列表(List)
 
@@ -1226,14 +1124,9 @@ getset:将给定 key 的值设为 value ，并返回 key 的旧值(old value)。
 
 ![image-20200403181347550](images/image-20200403181347550.png)
 
-
-
-
-
 #### lpush/rpush/lrange
 
 #### lpop/rpop
-
 
 ![image-20200403181641482](images/image-20200403181641482.png)
 
@@ -1246,16 +1139,12 @@ getset:将给定 key 的值设为 value ，并返回 key 的旧值(old value)。
 
 #### lrem key 删N个value
 
-
- * 从left往right删除2个值等于v1的元素，返回的值为实际删除的数量
- *  LREM list3 0 值，表示删除全部给定的值。零个就是全部值
+* 从left往right删除2个值等于v1的元素，返回的值为实际删除的数量
+* LREM list3 0 值，表示删除全部给定的值。零个就是全部值
 
 ![image-20200403181728030](images/image-20200403181728030.png)
 
- 
-
 #### ltrim key 开始index 结束index，截取指定范围的值后再赋值给key
-
 
 ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索引 结束索引
 
@@ -1265,13 +1154,11 @@ ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索�
 
 移除列表的最后一个元素，并将该元素添加到另一个列表并返回
 
- ![image-20200403181754116](images/image-20200403181754116.png)
+![image-20200403181754116](images/image-20200403181754116.png)
 
 #### lset key index value
 
- ![image-20200403181806782](images/image-20200403181806782.png)
-
- 
+![image-20200403181806782](images/image-20200403181806782.png)
 
 #### linsert key  before/after 值1 值2
 
@@ -1286,35 +1173,17 @@ ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索�
 - 如果值全移除，对应的键也就消失了。
 - 链表的操作无论是头和尾效率都极高，但假如是对中间元素进行操作，效率就很惨淡了。
 
-
-
 ### 5）Redis集合(Set)
 
 ### 6）Redis哈希(Hash)
 
 ### 7）Redis有序集合Zset(sorted set)
 
-
-
-
-
-
-
-
-
-
-
-
-
 在设置数据的时候，如果有重复的key，则值会发生覆盖
 
 ![image-20200402074213963](images/image-20200402074213963.png)
 
-
-
-
-
- setex(set with expire)键值秒/setnx(set if not exist) 
+setex(set with expire)键值秒/setnx(set if not exist)
 
 ![image-20200402074833320](images/image-20200402074833320.png)
 
@@ -1322,15 +1191,9 @@ ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索�
 
 ![image-20200402075149393](images/image-20200402075149393.png)
 
-
-
 通过msetnx设置值时，如果部分key已经存在，则都不生效，只有key都不存在时，设置才生效。
 
 ![image-20200402075430612](images/image-20200402075430612.png)
-
-
-
-
 
 ### LRANGE
 
@@ -1340,11 +1203,12 @@ ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索�
 
 * 求范围函数的一致性
 
-   如果你有一个list，里面的元素是从0到100，那么 `LRANGE list 0 10` 这个命令会返回11个元素，即最右边的那个元素也会被包含在内。
+  如果你有一个list，里面的元素是从0到100，那么 `LRANGE list 0 10` 这个命令会返回11个元素，即最右边的那个元素也会被包含在内。
 
 * 超过范围的下标
 
-  当下标超过list范围的时候不会产生error。 如果start比list的尾部下标大的时候，会返回一个空列表。 如果stop比list的实际尾部大的时候，Redis会当它是最后一个元素的下标。 
+  当下标超过list范围的时候不会产生error。 如果start比list的尾部下标大的时候，会返回一个空列表。
+  如果stop比list的实际尾部大的时候，Redis会当它是最后一个元素的下标。
 
 * 返回值
 
@@ -1353,8 +1217,6 @@ ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索�
 注意：LRANGE不会出队元素，只是查看元素。lpop和rpop会出队元素。
 
 ![image-20200402094950944](images/image-20200402094950944.png)
-
-
 
 在Redis中，list使用使用是双向链表来实现的，它可以作为队列，也可以作为栈，当组合lpush+rpop或rpush+lpop时为队列，当组合为lpush+lpop或rpush+rpop。
 
@@ -1413,7 +1275,8 @@ ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索�
 127.0.0.1:6379> 
 ```
 
-可以看到“lpush mylist 0 1 2 3 4 5”压入顺序，弹出顺序为5,4,3,2,1，先入后出；“rpush mylist 6 7 8 9 10”的压入顺序，弹出顺序为“6,7,8,9,10”，先入先出。
+可以看到“lpush mylist 0 1 2 3 4 5”压入顺序，弹出顺序为5,4,3,2,1，先入后出；“rpush mylist 6 7 8 9
+10”的压入顺序，弹出顺序为“6,7,8,9,10”，先入先出。
 
 至于“lpush+rpush+rpop”同理。
 
@@ -1427,20 +1290,25 @@ LTRIM key start stop
 
 **时间复杂度：**O(N) where N is the number of elements to be removed by the operation.
 
-修剪(trim)一个已存在的 list，这样 list 就会只包含指定范围的指定元素。start 和 stop 都是由0开始计数的， 这里的 0 是列表里的第一个元素（表头），1 是第二个元素，以此类推。
+修剪(trim)一个已存在的 list，这样 list 就会只包含指定范围的指定元素。start 和 stop 都是由0开始计数的， 这里的 0
+是列表里的第一个元素（表头），1 是第二个元素，以此类推。
 
 例如： `LTRIM foobar 0 2` 将会对存储在 foobar 的列表进行修剪，只保留列表里的前3个元素。
 
 start 和 end 也可以用负数来表示与表尾的偏移量，比如 -1 表示列表里的最后一个元素， -2 表示倒数第二个，等等。
 
-超过范围的下标并不会产生错误：如果 start 超过列表尾部，或者 start > end，结果会是列表变成空表（即该 key 会被移除）。 如果 end 超过列表尾部，Redis 会将其当作列表的最后一个元素。
+超过范围的下标并不会产生错误：如果 start 超过列表尾部，或者 start > end，结果会是列表变成空表（即该 key 会被移除）。 如果 end
+超过列表尾部，Redis 会将其当作列表的最后一个元素。
 
-`LTRIM` 的一个常见用法是和 [LPUSH](http://www.redis.cn/commands/lpush.html) / [RPUSH](http://www.redis.cn/commands/rpush.html) 一起使用。 例如：
+`LTRIM`
+的一个常见用法是和 [LPUSH](http://www.redis.cn/commands/lpush.html) / [RPUSH](http://www.redis.cn/commands/rpush.html)
+一起使用。 例如：
 
 - LPUSH mylist someelement
 - LTRIM mylist 0 99
 
-这一对命令会将一个新的元素 push 进列表里，并保证该列表不会增长到超过100个元素。这个是很有用的，比如当用 Redis 来存储日志。 需要特别注意的是，当用这种方式来使用 LTRIM 的时候，操作的复杂度是 O(1) ， 因为平均情况下，每次只有一个元素会被移除。
+这一对命令会将一个新的元素 push 进列表里，并保证该列表不会增长到超过100个元素。这个是很有用的，比如当用 Redis 来存储日志。
+需要特别注意的是，当用这种方式来使用 LTRIM 的时候，操作的复杂度是 O(1) ， 因为平均情况下，每次只有一个元素会被移除。
 
 **返回值**
 
@@ -1463,8 +1331,6 @@ redis> LRANGE mylist 0 -1
 redis> 
 ```
 
-
-
 ## 4：解析配置文件
 
 redis默认是没有密码的，可以通过如下的方式查看是否要求密码：
@@ -1485,8 +1351,6 @@ redis默认是没有密码的，可以通过如下的方式查看是否要求密
 
 ![image-20200402114156558](images/image-20200402114156558.png)
 
-
-
 为Redis设置密码：
 
 ![image-20200402114304549](images/image-20200402114304549.png)
@@ -1495,13 +1359,9 @@ redis默认是没有密码的，可以通过如下的方式查看是否要求密
 
 ![image-20200402114323935](images/image-20200402114323935.png)
 
-
-
 如果想要移除密码：
 
 ![image-20200402114353310](images/image-20200402114353310.png)
-
-
 
 Redis的缓存过期策略：
 
@@ -1510,12 +1370,6 @@ Redis的缓存过期策略：
 默认是永不过期：
 
 ![image-20200402114722703](images/image-20200402114722703.png)
-
-
-
-
-
-
 
 ## 5：redis.conf
 
@@ -1537,21 +1391,15 @@ Redis的缓存过期策略：
 
 这个dump文件，通常建议放置到其他设备上，做容灾备份。这里为了方便，拷贝一份命名为“dump.rdb_bak”
 
-
-
 如果此时清空Redis数据库并且关闭Redis连接
 
 ![image-20200402120953591](images/image-20200402120953591.png)
 
 执行Flush操作，会将内存中的数据刷写到磁盘上，形成dump文件。
 
-
-
 在redis中dump文件默认的命名规则为：
 
 ![image-20200402121044809](images/image-20200402121044809.png)
-
-
 
 再次启动redis的时候，发现没有数据
 
@@ -1565,13 +1413,9 @@ Redis的缓存过期策略：
 
 ![image-20200402121854083](images/image-20200402121854083.png)
 
-
-
 如果想要禁用save，在只需要设置为“”即可
 
 如果想要立即备份，则可以直接使用save命令。
-
-
 
 开启AOF
 
@@ -1580,8 +1424,6 @@ Redis的缓存过期策略：
 默认的追加文件名：
 
 ![image-20200403063729198](images/image-20200403063729198.png)
-
-
 
 实验：
 
@@ -1617,15 +1459,11 @@ Redis的缓存过期策略：
 
 ![image-20200403064610941](images/image-20200403064610941.png)
 
-
-
 AOF和DUMP可以同时存在，并且AOF优先级更高。
 
 如果AOF顺坏，可以使用如下的命令来进行修复
 
 ![image-20200403064927963](images/image-20200403064927963.png)
-
-
 
 关于自动重写。
 
@@ -1635,31 +1473,21 @@ AOF和DUMP可以同时存在，并且AOF优先级更高。
 
 ![image-20200403071327579](images/image-20200403071327579.png)
 
-
-
 ## 7：Redis的事务
 
 ![image-20200403074129951](images/image-20200403074129951.png)
-
-
 
 实例：开启事务并且批量执行插入数据操作
 
 ![image-20200403074401847](images/image-20200403074401847.png)
 
-
-
 在一个事务内，如果不想要某次操作，可以DISCARD这个事务
 
 ![image-20200403074522068](images/image-20200403074522068.png)
 
-
-
 如果某个事务在执行过程中出现了错误（出错的任务并没有被加入到队列中，而是直接报错），则整个事务也不会被提交：
 
 ![image-20200403074731763](images/image-20200403074731763.png)
-
-
 
 在被加入到队列中的任务，在执行过程中出现了错误，则只有出错的任务不会提交，但其他的数据能够正常的插入
 
@@ -1667,15 +1495,9 @@ AOF和DUMP可以同时存在，并且AOF优先级更高。
 
 这里k1所设置的是一个字符串，它不能自增，所以执行时会出错，但是其他数据却能够正常的插入。
 
-
-
 通过对比上面的两个操作可以发现，它们两者的根本区别在于，出错时的任务是否在队列中。
 
 通过上面的两个对比，可以发现Redis对于事务的支持是部分性的，不向传统的Mysql或Oracle那样绝对的强一致性。
-
-
-
-
 
 表锁和行锁
 
@@ -1685,11 +1507,7 @@ AOF和DUMP可以同时存在，并且AOF优先级更高。
 
 表锁并发性比较差，但是一致性比较的好。
 
-
-
 悲观锁只要没有同步或锁策略，操作就一定会出现问题。
-
-
 
 ![image-20200403091950792](images/image-20200403091950792.png)
 
@@ -1699,28 +1517,19 @@ AOF和DUMP可以同时存在，并且AOF优先级更高。
 
 ![image-20200403093058326](images/image-20200403093058326.png)
 
-
-
-
-
 ## 8：Redis的发布订阅
+
 ## 9：Redis的复制(Master/Slave)
 
 在主从复制中，Master负责数据的写，从机负责数据的读取，不负责数据的写入，也就是说从机是只读的。
 
-在没有配置哨兵模式时，Master上的数据，Slaves会复制一遍；在Master down了后，Slaves之间不会进行选举Master，在Master恢复后，会重新建立起与Slaves之间的关系（如果Master的数据被清空了，Slaves上保存的数据会怎么处理？）。在Slaves down了后，重新上线时会拷贝Master的数据到自己的仓库中。
-
-
+在没有配置哨兵模式时，Master上的数据，Slaves会复制一遍；在Master
+down了后，Slaves之间不会进行选举Master，在Master恢复后，会重新建立起与Slaves之间的关系（如果Master的数据被清空了，Slaves上保存的数据会怎么处理？）。在Slaves
+down了后，重新上线时会拷贝Master的数据到自己的仓库中。
 
 如果此时想要让Slave成为Master，只需要执行SLAVEOF no one即可
 
 ![image-20200403105318076](images/image-20200403105318076.png)
-
-
-
-
-
-
 
 ## 10：Redis的Java客户端Jedis
 

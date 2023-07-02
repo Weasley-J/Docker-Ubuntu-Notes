@@ -26,6 +26,7 @@ sudo apt-get install -y libxml2 libxml2-dev
 sudo apt-get install -y libxslt-devel
 sudo apt-get install -y pcre pcre-devel openssl openssl-devel gd-devel zlib-devel
 sudo apt -y upgrade
+
 ```
 
 

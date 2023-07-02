@@ -140,8 +140,6 @@ http {
 
 ## 1.2  重载nginx.conf文件
 
-
-
 ```shell
 clear && /usr/local/nginx/sbin/nginx  -s reload
 ```
