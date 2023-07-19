@@ -4194,7 +4194,9 @@ pwd: yapi.pro
 
 ## 2.18 docker安装xxl-job-admin
 
-- 查看版本: [xuxueli/xxl-job-admin Tags | Docker Hub](https://hub.docker.com/r/xuxueli/xxl-job-admin/tags)
+- <u>xxl-job</u>建表sql: [tables_xxl_job.sql](https://github.com/xuxueli/xxl-job/blob/master/doc/db/tables_xxl_job.sql)
+
+- 查看docker镜像版本: [xuxueli/xxl-job-admin Tags | Docker Hub](https://hub.docker.com/r/xuxueli/xxl-job-admin/tags)
 
 ```bash
 #!/bin/bash
@@ -4244,11 +4246,13 @@ docker run --name $CONTAINER_NAME --restart=always \
 
 # 日志
 docker logs -f xxl-job-admin
-
-
-# 访问链接
-# http://宿主机ip:8081/job
 ```
+
+
+
+访问链接: http://宿主机ip:8081/job
+
+
 
 ## 2.19 安装携程Apollo注册中心
 
