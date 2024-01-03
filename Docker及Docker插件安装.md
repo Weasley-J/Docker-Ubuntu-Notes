@@ -588,8 +588,8 @@ docker ps -l
 ```shell
 #!/usr/bin/env bash
 
-current_version="2.18.4"
-old_version="2.18.3"
+current_version="2.19.4"
+old_version="2.18.4"
 
 docker stop portainer && docker rm -f portainer
 docker rmi portainer/portainer-ce:${old_version}
@@ -4205,10 +4205,10 @@ pwd: yapi.pro
 
 WORK_DIR="/usr/local/xxl-job"
 CONTAINER_NAME="xxl-job-admin"
-LATEST_VERSION="2.3.1"
-PREV_VERSION=""
+PREV_VERSION="2.3.0"
+LATEST_VERSION="2.4.0"
 JAVA_OPTS="-Xms512m -Xmx512m"
-MYSQL_IP="127.0.0.1"
+MYSQL_IP="192.168.31.140"
 SPRING_ARGS="--server.servlet.context-path=/job \
 --spring.datasource.url=jdbc:mysql://$MYSQL_IP:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai \
 --spring.datasource.username=root \
@@ -4219,7 +4219,7 @@ docker network create --driver bridge --subnet 172.18.0.0/16 --gateway 172.18.0.
 
 docker stop $CONTAINER_NAME && docker rm -f $CONTAINER_NAME
 
-#docker rmi xuxueli/xxl-job-admin:$PREV_VERSION
+docker rmi xuxueli/xxl-job-admin:$PREV_VERSION
 docker pull xuxueli/xxl-job-admin:$LATEST_VERSION
 
 # centos
